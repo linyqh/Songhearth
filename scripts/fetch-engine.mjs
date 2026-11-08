@@ -10,7 +10,7 @@
 // AUDIOCPP_VERSION / AUDIOCPP_ASSET override the version and the asset suffix
 // (e.g. AUDIOCPP_ASSET=windows-x64-cpu-portable.zip).
 import { execFileSync } from "node:child_process";
-import { createWriteStream, existsSync, mkdirSync, mkdtempSync, readdirSync, renameSync, rmSync } from "node:fs";
+import { cpSync, createWriteStream, existsSync, mkdirSync, mkdtempSync, readdirSync, rmSync } from "node:fs";
 import { pipeline } from "node:stream/promises";
 import { Readable } from "node:stream";
 import { tmpdir } from "node:os";
@@ -71,7 +71,7 @@ try {
     if (name !== ".gitkeep") rmSync(join(dest, name), { recursive: true, force: true });
   }
   for (const name of readdirSync(tmp)) {
-    if (name !== (isZip ? "engine.zip" : "engine.tar.gz")) renameSync(join(tmp, name), join(dest, name));
+    if (name !== (isZip ? "engine.zip" : "engine.tar.gz")) cpSync(join(tmp, name), join(dest, name), { recursive: true });
   }
   if (!existsSync(join(dest, cliName))) throw new Error(`${cliName} missing from the archive`);
   console.log(`Staged into ${dest}`);
