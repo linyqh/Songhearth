@@ -27,6 +27,8 @@ uuid = { version = "1", features = ["v4"] }
 chrono = { version = "0.4", features = ["serde"] }
 sysinfo = { version = "0.37", default-features = false, features = ["system"] }
 hound = "3"
+# Decodes user-supplied reference songs (mp3/flac/m4a/ogg/wav) for cover jobs.
+symphonia = { version = "0.5", default-features = false, features = ["mp3", "aac", "isomp4", "flac", "vorbis", "ogg", "wav", "pcm", "alac"] }
 anyhow = "1"
 
 # Engine auto-download: audio.cpp ships .tar.gz on macOS and .zip on Windows.

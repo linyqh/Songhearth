@@ -1,4 +1,5 @@
-import { Boxes, Dices, Download, Lock, LockOpen, Music2, Sparkles, Timer, Wand2 } from "lucide-react";
+import { open } from "@tauri-apps/plugin-dialog";
+import { AudioLines, Boxes, Dices, Download, Lock, LockOpen, Music2, Sparkles, Timer, Wand2, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { compatible, ModelSelect } from "../components/ModelPicker";
@@ -45,17 +46,18 @@ export function CreatePage() {
   const [showAdvanced, setShowAdvanced] = useState(false);
 
   const vocals = !draft.instrumental;
+  const reference = !!draft.sourceAudio;
   const model = modelById(draft.modelId);
-  const candidates = useMemo(() => compatible(models, vocals), [models, vocals]);
+  const candidates = useMemo(() => compatible(models, vocals, reference), [models, vocals, reference]);
 
   // Keep the selected model valid for the current mode.
   useEffect(() => {
     if (!models.length) return;
-    if (!model || !(vocals ? model.vocals : model.instrumental)) {
+    if (!model || !(vocals ? model.vocals : model.instrumental) || (reference && !model.supportsSourceAudio)) {
       const next = candidates[0];
       if (next && next.id !== draft.modelId) setDraft({ modelId: next.id, duration: null, steps: null });
     }
-  }, [models.length, model, vocals, candidates, draft.modelId, setDraft]);
+  }, [models.length, model, vocals, reference, candidates, draft.modelId, setDraft]);
 
   const duration = model ? Math.min(model.duration.max, Math.max(model.duration.min, draft.duration ?? model.duration.default)) : 60;
   const steps = model?.steps ? draft.steps ?? model.steps.default : null;
@@ -83,6 +85,8 @@ export function CreatePage() {
       steps,
       cot: model.supportsCot ? draft.cot : null,
       negativePrompt: model.supportsNegativePrompt ? draft.negativePrompt : null,
+      sourceAudio: draft.sourceAudio,
+      coverStrength: draft.sourceAudio ? draft.coverStrength : null,
       title: draft.title.trim() || null,
     };
     const job = await run(() => backend.createJob(params));
@@ -110,6 +114,16 @@ export function CreatePage() {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   });
+
+  const chooseReference = async () => {
+    const file = await open({
+      multiple: false,
+      directory: false,
+      title: t("reference.chooseTitle"),
+      filters: [{ name: t("reference.filter"), extensions: ["mp3", "wav", "flac", "m4a", "aac", "ogg"] }],
+    });
+    if (typeof file === "string") setDraft({ sourceAudio: file, duration: null, steps: null });
+  };
 
   const insertTag = (tag: string) => {
     const el = lyricsRef.current;
@@ -179,6 +193,43 @@ export function CreatePage() {
               )}
             </div>
 
+            <div className="card pad">
+              <div className="label">
+                <AudioLines size={13} /> {t("reference.label")}
+              </div>
+              {draft.sourceAudio ? (
+                <div className="vstack" style={{ gap: 12 }}>
+                  <div className="hstack">
+                    <span className="grow ellipsis selectable" style={{ fontWeight: 600 }} title={draft.sourceAudio}>
+                      {draft.sourceAudio.split(/[\\/]/).pop()}
+                    </span>
+                    <button className="btn small" onClick={chooseReference}>
+                      {t("reference.change")}
+                    </button>
+                    <button className="icon-btn" title={t("reference.remove")} onClick={() => setDraft({ sourceAudio: null, coverStrength: null })}>
+                      <X size={15} />
+                    </button>
+                  </div>
+                  <div>
+                    <div className="label">
+                      {t("reference.strength")} <span className="aside">{Math.round((draft.coverStrength ?? 1) * 100)}%</span>
+                    </div>
+                    <Slider value={Math.round((draft.coverStrength ?? 1) * 100)} min={0} max={100} step={5} onChange={(v) => setDraft({ coverStrength: v / 100 })} />
+                    <div className="hint tiny" style={{ marginTop: 6 }}>
+                      {t("reference.strengthHint")}
+                    </div>
+                  </div>
+                  <div className="hint">{t("reference.lyricsHint")}</div>
+                </div>
+              ) : (
+                <div className="hstack">
+                  <div className="hint grow">{t("reference.empty")}</div>
+                  <button className="btn small" onClick={chooseReference}>
+                    {t("reference.choose")}
+                  </button>
+                </div>
+              )}
+            </div>
             <div className="card pad lyrics-card">
               <div className="hstack" style={{ marginBottom: 10 }}>
                 <div className="label" style={{ margin: 0 }}>
@@ -235,18 +286,24 @@ export function CreatePage() {
               <div className="label">
                 <Boxes size={13} /> {t("model.label")}
               </div>
-              <ModelSelect vocals={vocals} value={draft.modelId} onChange={(id) => setDraft({ modelId: id, duration: null, steps: null })} />
+              <ModelSelect vocals={vocals} reference={reference} value={draft.modelId} onChange={(id) => setDraft({ modelId: id, duration: null, steps: null })} />
             </div>
 
             {model && (
               <div className="card pad vstack" style={{ gap: 16 }}>
                 <div>
                   <div className="label">
-                    <Timer size={13} /> {model.duration.mode === "max" ? t("duration.labelMax") : t("duration.label")}
-                    <span className="aside">{formatDuration(duration)}</span>
+                    <Timer size={13} /> {reference ? t("duration.label") : model.duration.mode === "max" ? t("duration.labelMax") : t("duration.label")}
+                    {!reference && <span className="aside">{formatDuration(duration)}</span>}
                   </div>
-                  <Slider value={duration} min={model.duration.min} max={model.duration.max} step={5} onChange={(v) => setDraft({ duration: v })} />
-                  {model.duration.mode === "max" && <div className="hint tiny">{t("duration.maxHint")}</div>}
+                  {reference ? (
+                    <div className="hint tiny">{t("duration.followsReference")}</div>
+                  ) : (
+                    <>
+                      <Slider value={duration} min={model.duration.min} max={model.duration.max} step={5} onChange={(v) => setDraft({ duration: v })} />
+                      {model.duration.mode === "max" && <div className="hint tiny">{t("duration.maxHint")}</div>}
+                    </>
+                  )}
                 </div>
 
                 <SeedControl draft={draft} setDraft={setDraft} />

@@ -9,7 +9,7 @@
   },
   "ace_step_1_5_turbo": {
     "summary": "Fastest; MIT-licensed for commercial use; 50+ lyric languages",
-    "description": "Planner + diffusion hybrid that renders a song in 8 steps. Trained on licensed, royalty-free and synthetic music, so output is commercially usable. Full BF16 build (quantising breaks the planner's sampling), about 10 GB on disk.",
+    "description": "Planner + diffusion hybrid that renders a song in 8 steps. Trained on licensed, royalty-free and synthetic music, so output is commercially usable. Can also re-sing a reference song with new lyrics (cover). Full BF16 build (quantising breaks the planner's sampling), about 10 GB on disk.",
     "tags": ["Vocals", "Instrumental", "Multilingual", "Commercial use"],
     "languages": "50+ languages",
     "promptHint": "Describe style, mood, instruments and vocals in natural language, in English or Chinese.",

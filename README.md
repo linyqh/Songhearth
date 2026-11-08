@@ -22,7 +22,7 @@ Ships with a local HTTP API and an Agent Skill so Claude Code, Codex and other a
 
 ## Features
 
-- 🎼 **Create**: style prompt + lyrics editor (one-click section tags), vocal / instrumental toggle, model picker (quality, speed, license at a glance), duration, seed lock, and advanced options (YuE2 score planning, sampling steps, negative prompt). `⌘↩` (`Ctrl+↵` on Windows) to generate; drafts autosave.
+- 🎼 **Create**: style prompt + lyrics editor (one-click section tags), vocal / instrumental toggle, model picker (quality, speed, license at a glance), duration, seed lock, and advanced options (YuE2 score planning, sampling steps, negative prompt). **Reference song** (ACE-Step): pick an mp3/wav/flac/m4a/ogg, keep its melody and structure, and re-sing it with your own lyrics and style. `⌘↩` (`Ctrl+↵` on Windows) to generate; drafts autosave.
 - ⏳ **Queue**: jobs run in submission order with live stage, progress and ETA; cancel any time; system notification on completion.
 - 🎧 **Library**: waveform playback with click-to-seek, favorites, rename, search, reuse parameters, re-roll with a new seed, export, reveal in Finder / Explorer; failed jobs show the audio.cpp error and can be retried in one click.
 - 📦 **Model manager**: 8-way parallel segmented download, resume, pause/continue, mirror (hf-mirror), delete; warns when RAM is tight.

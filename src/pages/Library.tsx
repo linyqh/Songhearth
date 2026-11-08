@@ -309,6 +309,8 @@ function WorkDetail({
       steps: job.params.steps ?? null,
       cot: job.params.cot ?? "full",
       negativePrompt: job.params.negativePrompt ?? "",
+      sourceAudio: job.params.sourceAudio ?? null,
+      coverStrength: job.params.coverStrength ?? null,
     });
     onClose();
     setPage("create");

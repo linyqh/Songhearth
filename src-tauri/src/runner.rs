@@ -50,6 +50,8 @@ fn perf_key(job: &Job) -> String {
     match job.params.cot.as_deref() {
         Some(cot) if job.model_id == "yue2-3b" => format!("{}:{cot}", job.model_id),
         _ if job.model_id == "yue2-3b" => format!("{}:full", job.model_id),
+        // Covers skip the planner, so they run at a different speed.
+        _ if job.params.source_audio.is_some() => format!("{}:cover", job.model_id),
         _ => job.model_id.clone(),
     }
 }
@@ -105,11 +107,20 @@ fn build_args(core: &Core, job: &Job, model: &ModelDef, out: &Path) -> Vec<Strin
             a.push(if vocals { p.lyrics.clone() } else { "[instrumental]".into() });
         }
         "ace_step" => {
-            a.extend(["--task-route".into(), "text2music".into()]);
+            let cover = p.source_audio.is_some();
+            a.extend(["--task-route".into(), if cover { "cover" } else { "text2music" }.into()]);
             a.extend(["--text".into(), p.prompt.clone()]);
             a.push("--lyrics".into());
             a.push(if vocals { p.lyrics.clone() } else { "[Instrumental]".into() });
-            a.extend(["--duration-seconds".into(), format!("{:.0}", job.duration)]);
+            if cover {
+                // Output length is locked to the reference song.
+                a.extend(["--audio".into(), crate::jobs::source_wav(core, &job.id).to_string_lossy().into_owned()]);
+                if let Some(strength) = p.cover_strength {
+                    req.push(("audio_cover_strength", format!("{strength:.2}")));
+                }
+            } else {
+                a.extend(["--duration-seconds".into(), format!("{:.0}", job.duration)]);
+            }
             if vocals {
                 a.extend(["--language".into(), if has_cjk(&p.lyrics) { "zh".into() } else { "en".into() }]);
             }
@@ -203,6 +214,9 @@ async fn run(core: &Arc<Core>, id: &str) {
     };
     if !core.is_installed(&model.id.to_string()) {
         return fail(Coded::new("model_incomplete", format!("Model {} is not installed or incomplete", model.name)).with("name", model.name));
+    }
+    if job.params.source_audio.is_some() && !crate::jobs::source_wav(core, id).is_file() {
+        return fail(Coded::new("source_audio_missing", "The reference song copy is gone; retry the job to prepare it again"));
     }
     let out_dir = core.output_dir();
     if let Err(e) = std::fs::create_dir_all(&out_dir) {

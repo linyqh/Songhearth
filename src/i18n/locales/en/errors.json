@@ -40,5 +40,9 @@
   "unauthorized": "A valid API token is required.",
   "align_failed": "Lyric alignment failed: {{detail}}",
   "align_no_lyrics": "Only finished songs with lyrics can be aligned.",
-  "align_no_audio": "The audio file could not be found."
+  "align_no_audio": "The audio file could not be found.",
+  "model_no_source_audio": "{{name}} cannot use a reference song. Pick ACE-Step or remove the reference song.",
+  "source_audio_missing": "The reference song file could not be found.",
+  "source_audio_unreadable": "The reference song could not be read: {{detail}}",
+  "source_audio_too_long": "The reference song is too long. {{name}} supports up to {{max}} seconds."
 }

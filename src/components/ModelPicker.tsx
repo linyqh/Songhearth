@@ -9,9 +9,9 @@ import type { Model } from "../lib/types";
 import { LicenseBadge, Meter } from "./ui";
 
 /** Models able to serve the draft, best quality first; installed ones lead. */
-export function compatible(models: Model[], vocals: boolean): Model[] {
+export function compatible(models: Model[], vocals: boolean, reference = false): Model[] {
   return models
-    .filter((m) => (vocals ? m.vocals : m.instrumental))
+    .filter((m) => (vocals ? m.vocals : m.instrumental) && (!reference || m.supportsSourceAudio))
     .sort((a, b) => Number(b.status.state === "installed") - Number(a.status.state === "installed") || b.quality - a.quality);
 }
 
@@ -27,13 +27,13 @@ function StateIcon({ model }: { model: Model }) {
 }
 
 /** macOS-style pop-up button listing models; incompatible ones stay visible but disabled. */
-export function ModelSelect({ vocals, value, onChange }: { vocals: boolean; value: string; onChange: (id: string) => void }) {
+export function ModelSelect({ vocals, reference, value, onChange }: { vocals: boolean; reference: boolean; value: string; onChange: (id: string) => void }) {
   const { t } = useTranslation(["models", "common"]);
   const { models, run } = useStore();
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(0);
   const wrap = useRef<HTMLDivElement>(null);
-  const usable = useMemo(() => compatible(models, vocals), [models, vocals]);
+  const usable = useMemo(() => compatible(models, vocals, reference), [models, vocals, reference]);
   const others = models.filter((m) => !usable.includes(m));
   const selected = models.find((m) => m.id === value);
 
@@ -123,7 +123,7 @@ export function ModelSelect({ vocals, value, onChange }: { vocals: boolean; valu
           {others.length > 0 && (
             <>
               <div className="ms-sep" />
-              <div className="ms-group">{vocals ? t("picker.onlyInstrumental") : t("picker.needsLyrics")}</div>
+              <div className="ms-group">{reference ? t("picker.noReference") : vocals ? t("picker.onlyInstrumental") : t("picker.needsLyrics")}</div>
               {others.map((m) => (
                 <div key={m.id} className="ms-option disabled" aria-disabled="true">
                   <span className="ms-check" />

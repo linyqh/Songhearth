@@ -19,6 +19,10 @@ export interface Draft {
   steps: number | null;
   cot: Cot;
   negativePrompt: string;
+  /** Local path of the reference song to re-sing (ACE-Step cover). */
+  sourceAudio: string | null;
+  /** 0..1 closeness to the reference; null = model default (1). */
+  coverStrength: number | null;
 }
 
 export const emptyDraft: Draft = {
@@ -33,6 +37,8 @@ export const emptyDraft: Draft = {
   steps: null,
   cot: "full",
   negativePrompt: "",
+  sourceAudio: null,
+  coverStrength: null,
 };
 
 export interface Toast {

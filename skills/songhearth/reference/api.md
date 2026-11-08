@@ -50,9 +50,13 @@ Request body:
   "seed": 1234,
   "steps": 8,
   "cot": "full",
-  "negativePrompt": "optional (ACE-Step / Stable Audio)"
+  "negativePrompt": "optional (ACE-Step / Stable Audio)",
+  "sourceAudio": "/absolute/path/on/the/app/machine/original.mp3",
+  "coverStrength": 1.0
 }
 ```
+
+`sourceAudio` (ACE-Step only; other models answer `model_no_source_audio`) is a path on the machine running the app. The song is decoded (mp3/wav/flac/m4a/ogg, at most the model's max duration) and re-sung with the given `lyrics`/`prompt`; `duration` is ignored because the output has the reference's length. `coverStrength` (0..1, default 1) sets closeness to the original. Errors: `source_audio_missing`, `source_audio_unreadable`, `source_audio_too_long`.
 
 Only `prompt` is required. `duration` is clamped to the model range. `seed` is random when omitted (returned in the response).
 

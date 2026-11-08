@@ -7,6 +7,7 @@
     "recommended": "推荐",
     "onlyInstrumental": "仅生成纯音乐，切换模式后可用",
     "needsLyrics": "需要歌词，切换到人声歌曲后可用",
+    "noReference": "不支持参考歌曲，移除参考歌曲后可用",
     "quality": "质量",
     "speed": "速度",
     "license": "{{name}}：{{note}}",

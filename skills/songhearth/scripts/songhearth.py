@@ -202,6 +202,8 @@ def cmd_generate(args) -> None:
         "steps": args.steps,
         "cot": args.cot,
         "negativePrompt": args.negative_prompt,
+        "sourceAudio": str(Path(args.source_audio).expanduser().resolve()) if args.source_audio else None,
+        "coverStrength": args.cover_strength,
     }
     body = {k: v for k, v in body.items() if v not in (None, "")}
     job = request("POST", "/api/v1/generations", body)
@@ -273,6 +275,8 @@ def main() -> None:
     g.add_argument("--steps", type=int)
     g.add_argument("--cot", choices=["off", "melody", "full"], help="YuE2 score planning")
     g.add_argument("--negative-prompt")
+    g.add_argument("--source-audio", help="reference song (local to the app's machine): keeps its melody, re-sings with --lyrics (ACE-Step cover)")
+    g.add_argument("--cover-strength", type=float, help="0..1 closeness to the reference song (default 1)")
     g.add_argument("--out", help="also copy the WAV to this path")
     g.add_argument("--timeout", type=float, default=1800)
     g.add_argument("--no-wait", action="store_true")

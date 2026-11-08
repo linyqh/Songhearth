@@ -40,10 +40,23 @@
   "model": {
     "label": "模型"
   },
+  "reference": {
+    "label": "参考歌曲",
+    "empty": "可选。保留一首歌的旋律，换成你的歌词和风格重新演唱。",
+    "choose": "选择歌曲…",
+    "change": "更换",
+    "remove": "移除参考歌曲",
+    "chooseTitle": "选择参考歌曲",
+    "filter": "音频",
+    "strength": "与原曲的贴近程度",
+    "strengthHint": "越高越贴近原曲的旋律和结构；越低模型发挥空间越大。",
+    "lyricsHint": "每句歌词的字数（音节数）尽量与原曲对应，并用 [Verse] / [Chorus] 标记段落以对应原曲结构。仅 ACE-Step 支持。"
+  },
   "duration": {
     "label": "时长",
     "labelMax": "最长时长",
-    "maxHint": "实际长度由歌词决定，这里是上限。"
+    "maxHint": "实际长度由歌词决定，这里是上限。",
+    "followsReference": "与参考歌曲等长。"
   },
   "advanced": {
     "toggle": "高级选项"

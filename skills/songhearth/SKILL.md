@@ -27,7 +27,7 @@ All commands print JSON on stdout; progress goes to stderr.
 |---|---|---|---|---|
 | `yue2-3b` | highest-quality songs, Chinese/English lyrics | yes | optional (empty → instrumental) | non-commercial |
 | `minimax-music-3` | full pop songs up to 5 min | yes | **required** | conditional commercial |
-| `ace-step-1.5-turbo` | fastest songs, 50+ languages, commercial use | yes | optional | MIT (commercial OK) |
+| `ace-step-1.5-turbo` | fastest songs, 50+ languages, commercial use; **only model that can re-sing a reference song** | yes | optional | MIT (commercial OK) |
 | `stable-audio-3-medium` | instrumental BGM / scoring, best instrumental quality | no | not allowed | conditional commercial |
 | `stable-audio-3-small` | quick instrumental sketches/loops | no | not allowed | conditional commercial |
 
@@ -41,6 +41,8 @@ All commands print JSON on stdout; progress goes to stderr.
 - `--duration`: seconds. Exact length for Stable Audio / ACE-Step; *maximum* length for YuE2 / MiniMax (lyrics decide the real length).
 - `--seed`: reuse a previous job's `seed` to reproduce it; omit for variety.
 - `--cot off|melody|full` (YuE2 only): `full` (default) plans melody+chords for better structure; `off` is ~2× faster.
+- `--source-audio <file>` (ACE-Step only): reference song (mp3/wav/flac/m4a/ogg) on the machine running the app. The model keeps its melody and structure and re-sings it with `--lyrics` in `--prompt`'s style; the output has the reference's length (`--duration` is ignored, max 480 s). Use it when the user wants to "keep the song, change the lyrics". Match the syllable count of each lyric line to the original. `auto` picks ACE-Step for these jobs; other models reject it (`model_no_source_audio`).
+- `--cover-strength 0..1` (with `--source-audio`): closeness to the original; default 1, lower gives the model more freedom.
 
 ## Examples
 
@@ -57,6 +59,10 @@ python3 scripts/songhearth.py generate --instrumental --duration 30 \
 # Queue without waiting, then poll
 python3 scripts/songhearth.py generate --prompt "..." --no-wait
 python3 scripts/songhearth.py wait <id>
+
+# Re-sing a reference song with new lyrics (ACE-Step)
+python3 scripts/songhearth.py generate --source-audio original.mp3 \
+  --prompt "pop, bright female vocal" --lyrics-file new_lyrics.txt --out ./cover.wav
 ```
 
 ## Timing expectations (Apple Silicon reference; other GPUs vary)

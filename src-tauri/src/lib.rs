@@ -1,5 +1,6 @@
 mod align;
 mod api;
+mod audio;
 mod catalog;
 mod commands;
 mod core;

@@ -139,7 +139,10 @@ async fn list_jobs(State(core): AppState, Query(q): Query<ListQuery>) -> Json<Va
 }
 
 async fn create_job(State(core): AppState, Json(params): Json<GenParams>) -> Result<(StatusCode, Json<Value>), ApiError> {
-    let job = jobs::create(&core, params, "api")?;
+    // Decoding a reference song takes a moment; keep it off the async workers.
+    let job = tokio::task::spawn_blocking(move || jobs::create(&core, params, "api"))
+        .await
+        .map_err(|e| ApiError::new(StatusCode::INTERNAL_SERVER_ERROR, "internal", e.to_string()))??;
     Ok((StatusCode::ACCEPTED, Json(job_json(&job))))
 }
 

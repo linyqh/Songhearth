@@ -42,10 +42,23 @@
   "model": {
     "label": "Model"
   },
+  "reference": {
+    "label": "Reference song",
+    "empty": "Optional. Keep a song's melody and re-sing it with your own lyrics and style.",
+    "choose": "Choose song…",
+    "change": "Change",
+    "remove": "Remove reference song",
+    "chooseTitle": "Choose a reference song",
+    "filter": "Audio",
+    "strength": "Closeness to the original",
+    "strengthHint": "Higher keeps the melody and structure closer; lower gives the model more freedom.",
+    "lyricsHint": "Use roughly the same number of syllables per line as the original, and mark sections with [Verse] / [Chorus] to follow its structure. Only ACE-Step supports this."
+  },
   "duration": {
     "label": "Duration",
     "labelMax": "Maximum duration",
-    "maxHint": "The actual length follows the lyrics; this is the upper limit."
+    "maxHint": "The actual length follows the lyrics; this is the upper limit.",
+    "followsReference": "Same length as the reference song."
   },
   "advanced": {
     "toggle": "Advanced options"

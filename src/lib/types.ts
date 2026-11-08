@@ -64,6 +64,7 @@ export interface Model {
   steps: StepsSpec | null;
   supportsCot: boolean;
   supportsNegativePrompt: boolean;
+  supportsSourceAudio: boolean;
   recommendedFor: string[];
   totalSize: number;
   status: ModelStatus;
@@ -83,6 +84,8 @@ export interface GenParams {
   cot?: Cot | null;
   negativePrompt?: string | null;
   title?: string | null;
+  sourceAudio?: string | null;
+  coverStrength?: number | null;
 }
 
 export interface Job {

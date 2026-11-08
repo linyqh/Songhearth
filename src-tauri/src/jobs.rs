@@ -1,5 +1,6 @@
 //! Generation jobs: types, validation and queue operations.
 
+use std::path::{Path, PathBuf};
 use std::sync::Arc;
 
 use serde::{Deserialize, Serialize};
@@ -41,6 +42,11 @@ pub struct GenParams {
     pub cot: Option<String>,
     pub negative_prompt: Option<String>,
     pub title: Option<String>,
+    /// Reference song (mp3/wav/flac/m4a/ogg). The model re-sings it with the
+    /// new lyrics and style (cover route); the output has the same length.
+    pub source_audio: Option<String>,
+    /// How closely the cover follows the reference, 0..=1.
+    pub cover_strength: Option<f64>,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -95,10 +101,17 @@ pub fn wants_vocals(p: &GenParams) -> bool {
     !p.instrumental && !p.lyrics.trim().is_empty()
 }
 
+/// Decoded copy of a job's reference song, owned by the job.
+pub fn source_wav(core: &Core, id: &str) -> PathBuf {
+    core.paths.data.join("sources").join(format!("{id}.wav"))
+}
+
 /// Best installed model for the request: vocals need a singing model,
 /// otherwise prefer dedicated instrumental models.
 fn pick_model<'a>(core: &'a Core, p: &GenParams) -> Option<&'a ModelDef> {
-    let order: &[&str] = if wants_vocals(p) {
+    let order: &[&str] = if p.source_audio.is_some() {
+        &["ace-step-1.5-turbo"]
+    } else if wants_vocals(p) {
         &["yue2-3b", "minimax-music-3", "ace-step-1.5-turbo"]
     } else {
         &["stable-audio-3-medium", "yue2-3b", "ace-step-1.5-turbo", "stable-audio-3-small"]
@@ -109,9 +122,35 @@ fn pick_model<'a>(core: &'a Core, p: &GenParams) -> Option<&'a ModelDef> {
         .find(|m| core.is_installed(m.id))
 }
 
+/// Decodes the reference song into the job's private WAV and returns its
+/// duration, which becomes the job duration (covers keep the source length).
+fn prepare_source(src: &Path, wav: &Path, model: &ModelDef) -> Result<f64, JobError> {
+    if !src.is_file() {
+        return Err(err("source_audio_missing", format!("Reference song not found: {}", src.display())).with("path", src.display()));
+    }
+    if let Some(dir) = wav.parent() {
+        std::fs::create_dir_all(dir).map_err(|e| err("source_audio_unreadable", format!("Cannot prepare the reference song: {e}")).with("detail", e))?;
+    }
+    let secs = crate::audio::decode_to_wav(src, wav).map_err(|e| {
+        let _ = std::fs::remove_file(wav);
+        err("source_audio_unreadable", format!("Cannot read the reference song: {e}")).with("detail", format!("{e}"))
+    })?;
+    if secs > model.duration.max {
+        let _ = std::fs::remove_file(wav);
+        return Err(err(
+            "source_audio_too_long",
+            format!("The reference song is {secs:.0} s; {} supports at most {:.0} s", model.name, model.duration.max),
+        )
+        .with("max", format!("{:.0}", model.duration.max))
+        .with("name", model.name));
+    }
+    Ok(secs)
+}
+
 pub fn create(core: &Arc<Core>, mut p: GenParams, source: &str) -> Result<Job, JobError> {
     p.prompt = p.prompt.trim().to_string();
     p.lyrics = p.lyrics.trim().to_string();
+    p.source_audio = p.source_audio.take().map(|s| s.trim().to_string()).filter(|s| !s.is_empty());
     if !core.engine.read().unwrap().installed {
         return Err(err("engine_missing", "The audio.cpp engine is not installed; install it in Settings first"));
     }
@@ -146,10 +185,21 @@ pub fn create(core: &Arc<Core>, mut p: GenParams, source: &str) -> Result<Job, J
             return Err(err("invalid_cot", "cot must be off, melody or full"));
         }
     }
-    let duration = p
+    let id = uuid::Uuid::new_v4().simple().to_string()[..12].to_string();
+    let mut duration = p
         .duration
         .unwrap_or(model.duration.default)
         .clamp(model.duration.min, model.duration.max);
+    if let Some(src) = p.source_audio.clone() {
+        if !model.supports_source_audio {
+            return Err(err("model_no_source_audio", format!("{} cannot use a reference song; pick ACE-Step", model.name)).with("name", model.name));
+        }
+        let wav = source_wav(core, &id);
+        duration = prepare_source(Path::new(&src), &wav, model)?;
+        p.cover_strength = p.cover_strength.map(|s| s.clamp(0.0, 1.0));
+    } else {
+        p.cover_strength = None;
+    }
     if let (Some(steps), Some(spec)) = (p.steps, model.steps.as_ref()) {
         p.steps = Some(steps.clamp(spec.min, spec.max));
     }
@@ -163,7 +213,7 @@ pub fn create(core: &Arc<Core>, mut p: GenParams, source: &str) -> Result<Job, J
     p.model = model.id.to_string();
 
     let job = Job {
-        id: uuid::Uuid::new_v4().simple().to_string()[..12].to_string(),
+        id,
         title,
         model_id: model.id.to_string(),
         params: p,
@@ -233,6 +283,7 @@ pub fn delete(core: &Core, id: &str, delete_file: bool) -> Result<(), JobError> 
             let _ = std::fs::remove_file(path);
         }
     }
+    let _ = std::fs::remove_file(source_wav(core, id));
     core.jobs.lock().unwrap().retain(|j| j.id != id);
     core.persist_jobs();
     core.emit_job_removed(id);
@@ -246,5 +297,9 @@ pub fn retry(core: &Arc<Core>, id: &str, new_seed: bool) -> Result<Job, JobError
     params.seed = if new_seed { None } else { Some(job.seed) };
     params.duration = Some(job.duration);
     params.title = Some(job.title.clone());
+    // The original file may have moved; the job's decoded copy still works.
+    if params.source_audio.as_deref().is_some_and(|p| !Path::new(p).is_file()) {
+        params.source_audio = Some(source_wav(core, id).to_string_lossy().into_owned());
+    }
     create(core, params, &job.source)
 }

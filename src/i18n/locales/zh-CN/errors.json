@@ -40,5 +40,9 @@
   "unauthorized": "需要有效的 API Token。",
   "align_failed": "歌词对齐失败：{{detail}}",
   "align_no_lyrics": "只有带歌词的已完成作品才能对齐。",
-  "align_no_audio": "找不到音频文件。"
+  "align_no_audio": "找不到音频文件。",
+  "model_no_source_audio": "{{name}} 不支持参考歌曲，请改用 ACE-Step 或移除参考歌曲。",
+  "source_audio_missing": "找不到参考歌曲文件。",
+  "source_audio_unreadable": "无法读取参考歌曲：{{detail}}",
+  "source_audio_too_long": "参考歌曲太长，{{name}} 最长支持 {{max}} 秒。"
 }

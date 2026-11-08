@@ -137,9 +137,14 @@ pub fn delete_model(core: CoreState<'_>, id: String) -> Result<(), Coded> {
     crate::models::delete(&core, &id)
 }
 
+/// Async + blocking pool: preparing a reference song decodes the whole file,
+/// which must not run on the main thread.
 #[tauri::command]
-pub fn create_job(core: CoreState<'_>, params: GenParams) -> Result<Job, Coded> {
-    jobs::create(core.inner(), params, "app")
+pub async fn create_job(core: CoreState<'_>, params: GenParams) -> Result<Job, Coded> {
+    let core = core.inner().clone();
+    tauri::async_runtime::spawn_blocking(move || jobs::create(&core, params, "app"))
+        .await
+        .map_err(|e| Coded::new("unknown", e.to_string()))?
 }
 
 #[tauri::command]
@@ -153,8 +158,11 @@ pub fn delete_job(core: CoreState<'_>, id: String, delete_file: bool) -> Result<
 }
 
 #[tauri::command]
-pub fn retry_job(core: CoreState<'_>, id: String, new_seed: bool) -> Result<Job, Coded> {
-    jobs::retry(core.inner(), &id, new_seed)
+pub async fn retry_job(core: CoreState<'_>, id: String, new_seed: bool) -> Result<Job, Coded> {
+    let core = core.inner().clone();
+    tauri::async_runtime::spawn_blocking(move || jobs::retry(&core, &id, new_seed))
+        .await
+        .map_err(|e| Coded::new("unknown", e.to_string()))?
 }
 
 #[tauri::command]
