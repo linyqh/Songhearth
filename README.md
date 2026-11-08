@@ -1,90 +1,128 @@
+<div align="center">
+
+<img src="src-tauri/icons/icon.png" width="112" alt="Songhearth logo" />
+
 # Songhearth
 
-本地 AI 音乐生成桌面客户端（macOS）。基于 [Tauri 2](https://tauri.app) + [audio.cpp](https://github.com/0xShug0/audio.cpp)，在 Apple Silicon 的 Metal GPU 上离线运行开源音乐模型，并提供本地 HTTP API 与 Agent Skill，方便其他 Agent 调用。
+**A local-first AI music generation desktop app**
 
-## 功能
+Run open-source music models offline on the Apple Silicon Metal GPU. No cloud, no subscription.<br/>
+Ships with a local HTTP API and an Agent Skill so Claude Code, Codex and other agents can drive it.
 
-- **开始创作**：风格描述 + 歌词编辑（段落标记一键插入）、人声 / 纯音乐切换、模型选择（质量、速度、许可一目了然）、时长、种子锁定、高级选项（YuE2 乐谱规划、采样步数、反向提示词）。`⌘↩` 生成，草稿自动保存。
-- **队列**：任务按提交顺序依次执行，实时显示阶段、进度与剩余时间，可随时取消；后台完成时发送系统通知。
-- **我的作品**：波形试听、点击波形跳转、收藏、重命名、搜索、复用参数、换种子再来一版、导出、在 Finder 中显示；失败任务显示 audio.cpp 的错误并可一键重试。
-- **模型管理**：并行分段下载、断点续传、暂停/继续、镜像源（hf-mirror）、删除；根据本机内存提示是否吃紧。
-- **接口与 Skill**：REST API 默认对局域网开放、无需 Token（可在界面里关闭局域网访问或开启 Token），发现文件自动写入；一键把 Skill 安装到 Claude Code / Codex / 任意目录。
+![Platform](https://img.shields.io/badge/platform-macOS%20(Apple%20Silicon)-black?logo=apple)
+![Tauri](https://img.shields.io/badge/Tauri-2-24C8DB?logo=tauri&logoColor=white)
+![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)
+![Rust](https://img.shields.io/badge/Rust-stable-DEA584?logo=rust&logoColor=black)
 
-## 支持的模型
+[English](README.md) · [简体中文](README.zh-CN.md)
 
-| id | 模型 | 人声 | 许可 | 体积 |
+</div>
+
+---
+
+## Features
+
+- 🎼 **Create**: style prompt + lyrics editor (one-click section tags), vocal / instrumental toggle, model picker (quality, speed, license at a glance), duration, seed lock, and advanced options (YuE2 score planning, sampling steps, negative prompt). `⌘↩` to generate; drafts autosave.
+- ⏳ **Queue**: jobs run in submission order with live stage, progress and ETA; cancel any time; system notification on completion.
+- 🎧 **Library**: waveform playback with click-to-seek, favorites, rename, search, reuse parameters, re-roll with a new seed, export, reveal in Finder; failed jobs show the audio.cpp error and can be retried in one click.
+- 📦 **Model manager**: 8-way parallel segmented download, resume, pause/continue, mirror (hf-mirror), delete; warns when RAM is tight.
+- 🤖 **API & Skill**: REST API and discovery file generated automatically; install the Skill into Claude Code / Codex / any directory in one click.
+- 🌍 **i18n**: English / 简体中文; adding a language needs no code changes.
+- 🎨 **Native look**: macOS liquid-glass styling following system accent color and light/dark mode.
+
+## Quick start
+
+> **macOS (Apple Silicon) only** for now.
+
+1. Install and open the app. If the audio.cpp engine isn't found, first launch offers to download it (~35 MB).
+2. Download a model on the Models page (`yue2-3b`, 2.9 GB, is a good start).
+3. Enter a style prompt and lyrics on Create, then press `⌘↩`.
+
+Models live in `~/Library/Application Support/com.songhearth.app/models` by default (settings can point to an existing audio.cpp `models` directory). Tracks are saved to `~/Music/Songhearth`.
+
+## Supported models
+
+Model files come from the official audio.cpp GGUF packs on Hugging Face. **Check each model's license against your use case.**
+
+| id | Model | Vocals | License | Size |
 |---|---|---|---|---|
-| `yue2-3b` | YuE2 3B（Q4） | ✓（歌词可空 → 纯音乐） | CC BY-NC 4.0，仅非商用 | 2.9 GB |
-| `ace-step-1.5-turbo` | ACE-Step 1.5 Turbo（BF16） | ✓ | MIT，可商用 | 10.1 GB |
-| `minimax-music-3` | MiniMax Music 3（Q4/Q8 组合） | ✓（必须有歌词） | 社区许可，有条件商用 | 8.5 GB |
-| `stable-audio-3-medium` | Stable Audio 3 Medium（Q8） | ✗ 纯音乐 | Stability 社区许可 | 3.6 GB |
-| `stable-audio-3-small` | Stable Audio 3 Small Music（Q8） | ✗ 纯音乐 | Stability 社区许可 | 1.7 GB |
+| `yue2-3b` | YuE2 3B (Q4) | ✓ (empty lyrics → instrumental) | CC BY-NC 4.0, non-commercial | 2.9 GB |
+| `ace-step-1.5-turbo` | ACE-Step 1.5 Turbo (BF16) | ✓ | MIT, commercial OK | 10.1 GB |
+| `minimax-music-3` | MiniMax Music 3 (Q4/Q8 mix) | ✓ (lyrics required) | Community license, conditional commercial use | 8.5 GB |
+| `stable-audio-3-medium` | Stable Audio 3 Medium (Q8) | ✗ instrumental | Stability community license | 3.6 GB |
+| `stable-audio-3-small` | Stable Audio 3 Small Music (Q8) | ✗ instrumental | Stability community license | 1.7 GB |
 
-模型文件来自 Hugging Face 上 audio.cpp 官方 GGUF 包，默认存放在 `~/Library/Application Support/com.songhearth.app/models`（可在设置中改为已有的 audio.cpp `models` 目录）。作品默认保存到 `~/Music/Songhearth`。
+## HTTP API & Agent Skill
 
-## 开发
+The API listens on `0.0.0.0:17865` by default: `http://127.0.0.1:17865` locally, or this machine's IP from the LAN (shown on the in-app API & Skill page).
 
-需要 Node 20+、Rust（stable）、Xcode 命令行工具。
+> ⚠️ By default the API is **open to the LAN with no token**. On untrusted networks, disable LAN access or enable the Bearer token in the app.
 
-```bash
-npm install
-npm run fetch-engine        # 下载 audio.cpp v0.9.4 macOS 预编译包到 src-tauri/resources/engine（打包进 .app）
-npx tauri dev               # 开发
-npx tauri build             # 产出 .app / .dmg
-```
-
-引擎查找顺序：设置中的自定义路径 → 应用内置（`resources/engine`）→ 应用自动下载（`~/Library/Application Support/com.songhearth.app/engine/current`）→ `/opt/homebrew/bin`、`/usr/local/bin`。未找到时，首次启动会引导下载（约 35 MB）。
-
-Rust 单元测试：`cd src-tauri && cargo test --lib`。
-
-## 多语言（i18n）
-
-界面使用 [i18next](https://www.i18next.com) + react-i18next，目前支持 English（`en`，源语言）和简体中文（`zh-CN`）。设置 → 语言可选“跟随系统”或指定语言，首次启动按系统语言匹配。
-
-```
-src/i18n/
-  index.ts              初始化、语言发现、系统语言匹配
-  translate.ts          translateError / translateStage（后端消息翻译）
-  catalog.ts            模型文案翻译（按模型 id）
-  resources.d.ts        翻译键的类型声明（以 en 为准，写错键会在 tsc 报错）
-  locales/<语言代码>/   common · shell · create · library · models · catalog · api · settings · errors · stages
-```
-
-**新增一种语言**（例如日语 `ja`）：
-
-1. 复制 `src/i18n/locales/en` 为 `src/i18n/locales/ja`，逐个翻译 JSON 值（保留 `{{变量}}` 与 `_one/_other` 复数后缀按该语言的复数规则调整）。
-2. 在 `ja/common.json` 里把 `meta.name` 改成该语言自己的名字（如“日本語”）——它会自动出现在设置的语言列表里。
-3. 运行 `npm run i18n:check`：校验各语言文件齐全、键一致、占位符一致。`npm run build` 会先执行该检查。
-
-无需改任何代码：语言通过 `import.meta.glob` 自动发现。后端不产出界面文案，只返回稳定的错误码 + 参数（`errors:<code>`）和阶段码（`stages:<code>`）；HTTP 接口里的 `message` 保持英文，方便 Agent 读取。
-
-## 架构
-
-```
-src/                      React + TypeScript 界面（macOS 液态玻璃风格，跟随系统强调色与深浅色）
-src-tauri/src/
-  core.rs                 共享状态、持久化（settings/jobs/perf.json）、事件推送
-  catalog.rs              模型目录（文件、参数范围、许可、推荐用途）
-  engine.rs               audio.cpp 定位 / 下载安装
-  models.rs               模型下载：8 路分段并行、.part + 状态文件断点续传
-  jobs.rs                 任务校验、自动选模型、队列操作
-  runner.rs               逐个执行 audiocpp_cli，解析日志得到阶段/进度/ETA，可取消
-  api.rs                  axum HTTP API + api.json 发现文件
-  commands.rs             Tauri 命令（UI 调用）
-skills/songhearth/        Agent Skill：SKILL.md、零依赖 Python 客户端、API 文档
-```
-
-每个任务启动一次 `audiocpp_cli`（`--backend metal`），因此取消即终止进程、崩溃不会影响应用；代价是每次约 5–10 秒的模型加载。ETA 先按内置经验值估算，每完成一首后按实测速度自动校准。
-
-## HTTP API 与 Skill
-
-API 默认监听 `0.0.0.0:17865`：本机用 `http://127.0.0.1:17865`，局域网内其他设备用本机 IP（界面“接口与 Skill”页会显示）。默认不要求 Token；开启后需带 Bearer Token。地址与 Token 写入 `~/Library/Application Support/com.songhearth.app/api.json`（权限 0600）。完整接口见 [skills/songhearth/reference/api.md](skills/songhearth/reference/api.md)。
+Address and token are written to `~/Library/Application Support/com.songhearth.app/api.json` (mode 0600). Full reference: [skills/songhearth/reference/api.md](skills/songhearth/reference/api.md).
 
 ```bash
 python3 skills/songhearth/scripts/songhearth.py status
 python3 skills/songhearth/scripts/songhearth.py generate \
   --prompt "Mandarin, indie pop, warm acoustic guitar, female vocal" \
-  --lyrics-file lyrics.txt --title "夏夜" --out ./xiaye.wav
+  --lyrics-file lyrics.txt --title "Summer Night" --out ./summer-night.wav
 ```
 
-客户端会自动读取发现文件；应用未运行时会尝试用 `open -b com.songhearth.app` 启动它。
+The client has zero dependencies, reads the discovery file automatically, and tries `open -b com.songhearth.app` if the app isn't running.
+
+## Architecture
+
+```
+src/                      React + TypeScript UI
+src-tauri/src/
+  core.rs                 shared state, persistence (settings/jobs/perf.json), event push
+  catalog.rs              model catalog (files, parameter ranges, license, recommended use)
+  engine.rs               locate / download audio.cpp
+  models.rs               model download: 8-way segments, .part + state file resume
+  jobs.rs                 job validation, auto model pick, queue ops
+  runner.rs               runs audiocpp_cli one job at a time; parses logs for stage/progress/ETA; cancellable
+  api.rs                  axum HTTP API + api.json discovery file
+  commands.rs             Tauri commands (called by the UI)
+skills/songhearth/        Agent Skill: SKILL.md, zero-dependency Python client, API docs
+```
+
+Each job spawns one `audiocpp_cli` (`--backend metal`): cancel kills the process, and a crash can't take the app down. The cost is ~5–10 s model load per job. ETA starts from built-in estimates and calibrates to measured speed after each track.
+
+Engine lookup order: custom path in settings → bundled (`resources/engine`) → auto-downloaded (`~/Library/Application Support/com.songhearth.app/engine/current`) → `/opt/homebrew/bin`, `/usr/local/bin`.
+
+## Internationalization
+
+UI uses [i18next](https://www.i18next.com) + react-i18next. Supported: English (`en`, source) and Simplified Chinese (`zh-CN`). Settings → Language offers "Follow system" or a fixed language.
+
+<details>
+<summary><b>Adding a language (e.g. Japanese <code>ja</code>)</b></summary>
+
+1. Copy `src/i18n/locales/en` to `src/i18n/locales/ja` and translate the JSON values (keep `{{variables}}`; adjust `_one/_other` plural suffixes to the language's plural rules).
+2. Set `meta.name` in `ja/common.json` to the language's own name (e.g. "日本語"); it appears in the language list automatically.
+3. Run `npm run i18n:check` to verify files, keys and placeholders match. `npm run build` runs it first.
+
+No code changes needed: languages are discovered via `import.meta.glob`. The backend emits no UI text, only stable error codes + params (`errors:<code>`) and stage codes (`stages:<code>`); `message` in HTTP responses stays English for agents.
+
+</details>
+
+## Development
+
+Requires Node 20+, Rust (stable) and Xcode command line tools.
+
+```bash
+npm install
+npm run fetch-engine        # download audio.cpp v0.9.4 macOS build into src-tauri/resources/engine (bundled into the .app)
+npx tauri dev               # develop
+npx tauri build             # produce .app / .dmg
+```
+
+| Command | Purpose |
+|---|---|
+| `npm run typecheck` | TypeScript type check |
+| `npm run i18n:check` | Validate translation files |
+| `cd src-tauri && cargo test --lib` | Rust unit tests |
+
+## Acknowledgements
+
+- [audio.cpp](https://github.com/0xShug0/audio.cpp): inference engine
+- [Tauri](https://tauri.app): desktop framework
+- The authors and communities of YuE, ACE-Step, MiniMax Music and Stable Audio
