@@ -1,7 +1,7 @@
 {
   "yue2_3b": {
     "summary": "Top-tier open-source song quality; vocals and backing in one pass",
-    "description": "Highest open-source score on WildSongBench (self-reported; comparable to Suno v5). Chinese and English lyrics; leave the lyrics empty for an instrumental. Q4 quantisation uses about 10 GB of memory on Apple Silicon; song length follows the lyrics.",
+    "description": "Highest open-source score on WildSongBench (self-reported; comparable to Suno v5). Chinese and English lyrics; leave the lyrics empty for an instrumental. Q4 quantisation uses about 10 GB of memory; song length follows the lyrics.",
     "tags": ["Vocals", "Instrumental", "Chinese", "English"],
     "languages": "Chinese, English",
     "promptHint": "English tags work best, comma-separated: language, genre, instruments, vocals.",

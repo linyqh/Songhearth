@@ -1,5 +1,4 @@
 use std::path::{Path, PathBuf};
-use std::process::Command;
 
 use serde::Serialize;
 
@@ -84,35 +83,50 @@ pub struct SystemInfo {
     pub total_memory_gb: f64,
     pub chip: String,
     pub arch: String,
-    pub os_version: String,
-}
-
-fn sysctl(name: &str) -> Option<String> {
-    let out = Command::new("/usr/sbin/sysctl").arg("-n").arg(name).output().ok()?;
-    if !out.status.success() {
-        return None;
-    }
-    Some(String::from_utf8_lossy(&out.stdout).trim().to_string())
+    /// Human-readable OS name and version, e.g. "macOS 15.2" or "Windows 11 Pro".
+    pub os: String,
 }
 
 pub fn system_info() -> SystemInfo {
-    let mem = sysctl("hw.memsize")
-        .and_then(|s| s.parse::<f64>().ok())
-        .map(|b| (b / 1024f64.powi(3)).round())
-        .unwrap_or(0.0);
-    let chip = sysctl("machdep.cpu.brand_string").unwrap_or_else(|| "Unknown".into());
-    let os_version = Command::new("/usr/bin/sw_vers")
-        .arg("-productVersion")
-        .output()
-        .ok()
-        .map(|o| String::from_utf8_lossy(&o.stdout).trim().to_string())
-        .unwrap_or_default();
+    use sysinfo::{CpuRefreshKind, MemoryRefreshKind, RefreshKind, System};
+    let sys = System::new_with_specifics(
+        RefreshKind::nothing()
+            .with_memory(MemoryRefreshKind::nothing().with_ram())
+            .with_cpu(CpuRefreshKind::nothing()),
+    );
+    let chip = sys
+        .cpus()
+        .first()
+        .map(|c| c.brand().trim().to_string())
+        .filter(|b| !b.is_empty())
+        .unwrap_or_else(|| "Unknown".into());
     SystemInfo {
-        total_memory_gb: mem,
+        total_memory_gb: (sys.total_memory() as f64 / 1024f64.powi(3)).round(),
         chip,
         arch: std::env::consts::ARCH.to_string(),
-        os_version,
+        os: System::long_os_version().unwrap_or_else(|| std::env::consts::OS.to_string()),
     }
+}
+
+/// Sets Unix permission bits. No-op on Windows, where files under the
+/// per-user app data folder already inherit user-only ACLs.
+#[cfg(unix)]
+pub fn set_unix_mode(path: &Path, mode: u32) -> std::io::Result<()> {
+    use std::os::unix::fs::PermissionsExt;
+    std::fs::set_permissions(path, std::fs::Permissions::from_mode(mode))
+}
+
+#[cfg(not(unix))]
+pub fn set_unix_mode(_path: &Path, _mode: u32) -> std::io::Result<()> {
+    Ok(())
+}
+
+/// Keeps `audiocpp_cli` from flashing a console window when the GUI app
+/// (Windows subsystem) spawns it.
+pub fn hide_console(cmd: &mut tokio::process::Command) -> &mut tokio::process::Command {
+    #[cfg(windows)]
+    cmd.creation_flags(0x0800_0000); // CREATE_NO_WINDOW
+    cmd
 }
 
 /// Peak envelope for the library waveform; reads 16/24/32-bit PCM or float WAV.

@@ -25,10 +25,17 @@ futures-util = "0.3"
 axum = "0.8"
 uuid = { version = "1", features = ["v4"] }
 chrono = { version = "0.4", features = ["serde"] }
-flate2 = "1"
-tar = "0.4"
+sysinfo = { version = "0.37", default-features = false, features = ["system"] }
 hound = "3"
 anyhow = "1"
+
+# Engine auto-download: audio.cpp ships .tar.gz on macOS and .zip on Windows.
+[target.'cfg(not(windows))'.dependencies]
+flate2 = "1"
+tar = "0.4"
+
+[target.'cfg(windows)'.dependencies]
+zip = { version = "9", default-features = false, features = ["deflate"] }
 
 [profile.release]
 codegen-units = 1

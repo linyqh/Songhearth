@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { translateStage } from "../i18n/translate";
 import { formatEta } from "../lib/format";
+import { MOD_LABEL } from "../lib/platform";
 import { useStore, type Page } from "../lib/store";
 import { IconApi, IconCreate, IconModels, IconSettings, IconWorks } from "./icons";
 import { Wordmark } from "./Wordmark";
@@ -48,7 +49,7 @@ export function Sidebar() {
         if (n.page === "library") selectJob(null);
         setPage(n.page);
       }}
-      title={`${n.label}  ⌘${n.key}`}
+      title={`${n.label}  ${MOD_LABEL}${n.key}`}
     >
       {n.icon}
       <span>{n.label}</span>

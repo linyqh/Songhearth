@@ -13,7 +13,6 @@ pub fn install(dir: &Path) -> std::io::Result<()> {
     std::fs::write(dir.join("reference/api.md"), API_MD)?;
     let script = dir.join("scripts/songhearth.py");
     std::fs::write(&script, CLIENT_PY)?;
-    use std::os::unix::fs::PermissionsExt;
-    std::fs::set_permissions(&script, std::fs::Permissions::from_mode(0o755))?;
+    crate::util::set_unix_mode(&script, 0o755)?;
     Ok(())
 }

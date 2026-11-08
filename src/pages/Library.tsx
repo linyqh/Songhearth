@@ -401,7 +401,7 @@ function WorkDetail({
                   <button className="btn" onClick={exportTrack}>
                     <Share size={14} /> {t("detail.export")}
                   </button>
-                  <button className="icon-btn" title={t("shell:revealInFinder")} onClick={() => job.outputPath && revealItemInDir(job.outputPath)}>
+                  <button className="icon-btn" title={t("shell:revealInFolder")} onClick={() => job.outputPath && revealItemInDir(job.outputPath)}>
                     <FolderOpen size={16} />
                   </button>
                 </>

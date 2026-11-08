@@ -17,6 +17,8 @@ use crate::settings::Settings;
 pub struct Paths {
     pub data: PathBuf,
     pub home: PathBuf,
+    /// The user's Music folder; default parent of the output folder.
+    pub music: PathBuf,
     pub settings: PathBuf,
     pub jobs: PathBuf,
     pub perf: PathBuf,
@@ -106,8 +108,11 @@ fn remap_legacy_paths(jobs: &mut [Job], home: &Path) -> bool {
 
 impl Core {
     pub fn init(app: AppHandle) -> anyhow::Result<Arc<Self>> {
-        let data = app.path().app_data_dir()?;
+        // Local (not roaming) app data: models are multi-GB and must not sync
+        // with a Windows roaming profile. Identical to app_data_dir on macOS.
+        let data = app.path().app_local_data_dir()?;
         let home = app.path().home_dir()?;
+        let music = app.path().audio_dir().unwrap_or_else(|_| home.join("Music"));
         migrate_legacy(&data, &home);
         std::fs::create_dir_all(&data)?;
         let bundled_engine = app
@@ -115,7 +120,7 @@ impl Core {
             .resource_dir()
             .ok()
             .map(|d| d.join("engine"))
-            .filter(|d| d.join("audiocpp_cli").is_file());
+            .filter(|d| d.join(crate::engine::CLI_NAME).is_file());
         let paths = Paths {
             settings: data.join("settings.json"),
             jobs: data.join("jobs.json"),
@@ -124,6 +129,7 @@ impl Core {
             engine_dir: data.join("engine"),
             bundled_engine,
             home,
+            music,
             data,
         };
 
@@ -189,7 +195,7 @@ impl Core {
         self.settings()
             .output_dir
             .map(PathBuf::from)
-            .unwrap_or_else(|| self.paths.home.join("Music").join("Songhearth"))
+            .unwrap_or_else(|| self.paths.music.join("Songhearth"))
     }
 
     /// The webview plays files through the asset protocol; custom output

@@ -1,14 +1,14 @@
 {
   "title": "API & Skill",
-  "subtitle": "Let other agents and scripts generate music on this Mac",
+  "subtitle": "Let other agents and scripts generate music on this computer",
   "http": {
     "title": "HTTP API",
     "enable": "Enable API",
     "running": "● Running · {{url}}",
     "disabled": "Disabled",
     "lan": "Allow LAN access",
-    "lanOn": "Devices on the same network can call it through this Mac’s IP. Without a token, no authentication is required.",
-    "lanOff": "Only this Mac (127.0.0.1) can access it",
+    "lanOn": "Devices on the same network can call it through this computer’s IP. Without a token, no authentication is required.",
+    "lanOff": "Only this computer (127.0.0.1) can access it",
     "port": "Port",
     "requireToken": "Require token",
     "requireTokenHint": "Off by default: anyone who knows the address can generate music. When on, calls must include the token.",

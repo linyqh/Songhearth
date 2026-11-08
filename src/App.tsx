@@ -8,6 +8,7 @@ import { Sidebar } from "./components/Sidebar";
 import { Toasts } from "./components/Toasts";
 import { Sheet } from "./components/ui";
 import { PlayerProvider } from "./lib/player";
+import { isMod } from "./lib/platform";
 import { StoreProvider, useStore, type Page } from "./lib/store";
 import { ApiPage } from "./pages/Api";
 import { CreatePage } from "./pages/Create";
@@ -24,7 +25,7 @@ function Shell() {
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (!e.metaKey || e.altKey || e.ctrlKey) return;
+      if (!isMod(e) || e.altKey) return;
       const idx = Number(e.key) - 1;
       if (idx >= 0 && idx < PAGES.length) {
         e.preventDefault();

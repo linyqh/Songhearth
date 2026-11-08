@@ -3,14 +3,14 @@
   "language": {
     "title": "语言",
     "label": "应用语言",
-    "hint": "“跟随系统”会在可用时使用 macOS 的系统语言。",
+    "hint": "“跟随系统”会在可用时使用操作系统的语言。",
     "system": "跟随系统"
   },
   "engine": {
     "title": "推理引擎",
     "customPath": "自定义引擎路径",
     "threads": "CPU 线程",
-    "threadsHint": "GPU（Metal）负责主要计算，线程影响预处理与采样"
+    "threadsHint": "GPU 负责主要计算，线程影响预处理与采样"
   },
   "storage": {
     "title": "存储位置",

@@ -3,14 +3,14 @@
   "language": {
     "title": "Language",
     "label": "App language",
-    "hint": "“Follow system” uses your macOS language when it’s available.",
+    "hint": "“Follow system” uses your operating system language when it’s available.",
     "system": "Follow system"
   },
   "engine": {
     "title": "Inference engine",
     "customPath": "Custom engine path",
     "threads": "CPU threads",
-    "threadsHint": "The GPU (Metal) does most of the work; threads affect preprocessing and sampling"
+    "threadsHint": "The GPU does most of the work; threads affect preprocessing and sampling"
   },
   "storage": {
     "title": "Storage",

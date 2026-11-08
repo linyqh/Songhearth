@@ -17,8 +17,21 @@ import urllib.request
 from pathlib import Path
 
 BUNDLE_ID = "com.songhearth.app"
-DISCOVERY = Path.home() / "Library" / "Application Support" / BUNDLE_ID / "api.json"
 DEFAULT_URL = "http://127.0.0.1:17865"
+
+
+def _discovery_file() -> Path:
+    """Where the app writes api.json: its per-user local data folder."""
+    if sys.platform == "win32":
+        base = Path(os.environ.get("LOCALAPPDATA") or Path.home() / "AppData" / "Local")
+    elif sys.platform == "darwin":
+        base = Path.home() / "Library" / "Application Support"
+    else:
+        base = Path(os.environ.get("XDG_DATA_HOME") or Path.home() / ".local" / "share")
+    return base / BUNDLE_ID / "api.json"
+
+
+DISCOVERY = _discovery_file()
 
 
 class ApiError(Exception):
@@ -63,13 +76,29 @@ def request(method: str, path: str, body: dict | None = None, timeout: float = 3
         raise ApiError(e.code, err.get("code", "http_error"), err.get("message", str(e))) from None
 
 
+def launch_app() -> bool:
+    """Starts the app without stealing focus where the OS allows it; False if it cannot be found."""
+    if sys.platform == "darwin":
+        subprocess.run(["open", "-g", "-b", BUNDLE_ID], check=False)
+        return True
+    if sys.platform == "win32":
+        roots = [os.environ.get("LOCALAPPDATA"), os.environ.get("PROGRAMFILES")]
+        for root in filter(None, roots):
+            # Per-user NSIS install (default) first, then per-machine.
+            for rel in ("Songhearth", "Programs/Songhearth"):
+                exe = Path(root) / rel / "Songhearth.exe"
+                if exe.exists():
+                    subprocess.Popen([str(exe)], creationflags=0x00000008 | 0x00000200, close_fds=True)  # DETACHED_PROCESS | NEW_PROCESS_GROUP
+                    return True
+    return False
+
+
 def ensure_running(launch: bool = True, wait_s: float = 30) -> dict:
     try:
         return request("GET", "/api/v1/health", timeout=3)
     except (urllib.error.URLError, ConnectionError, TimeoutError):
-        if not launch or sys.platform != "darwin":
+        if not launch or not launch_app():
             raise
-    subprocess.run(["open", "-g", "-b", BUNDLE_ID], check=False)
     deadline = time.time() + wait_s
     while time.time() < deadline:
         time.sleep(1)

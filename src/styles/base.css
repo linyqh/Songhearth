@@ -88,6 +88,20 @@
   }
 }
 
+/* Windows: the window is opaque (native title bar, no vibrancy), so the bottom
+   layer needs a solid colour, and the system font stack is Segoe UI. */
+:root[data-platform="windows"] {
+  --font: "Segoe UI Variable Text", "Segoe UI", "Microsoft YaHei UI", "Microsoft YaHei", system-ui, sans-serif;
+  --font-display: "Segoe UI Variable Display", "Segoe UI", "Microsoft YaHei UI", "Microsoft YaHei", system-ui, sans-serif;
+  --mono: ui-monospace, Consolas, "Cascadia Mono", monospace;
+  --window: #e9e9ee;
+}
+@media (prefers-color-scheme: dark) {
+  :root[data-platform="windows"] { --window: #1b1b1d; }
+}
+/* No traffic lights to clear. */
+:root[data-platform="windows"] .sidebar-top { height: 14px; }
+
 * { box-sizing: border-box; }
 
 html, body, #root {

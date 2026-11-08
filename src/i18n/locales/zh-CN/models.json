@@ -17,8 +17,8 @@
   "page": {
     "title": "模型",
     "subtitle": "已占用 {{size}}",
-    "system": "{{chip}} · {{memory}} GB 统一内存",
-    "memoryPlenty": "全部模型都可以在这台 Mac 上运行。生成时建议关闭占用内存较大的应用。",
+    "system": "{{chip}} · {{memory}} GB 内存",
+    "memoryPlenty": "全部模型都可以在这台电脑上运行。生成时建议关闭占用内存较大的应用。",
     "memoryOk": "可运行大部分模型；ACE-Step 与 MiniMax 生成长歌曲时内存吃紧。",
     "memoryLow": "内存较小，推荐 Stable Audio 3 Small 或 YuE2（Q4）。",
     "footer": "模型文件来自 Hugging Face 上 audio.cpp 官方 GGUF 包，支持断点续传。下载慢可在“设置 → 下载源”中切换镜像。"
@@ -36,7 +36,7 @@
     "durationRange": "{{min}}–{{max}} 秒",
     "license": "{{name}}：{{note}}",
     "progress": "{{done}} / {{total}} · {{speed}}",
-    "showInFinder": "在 Finder 中显示",
+    "showInFolder": "在文件夹中显示",
     "deleteTitle": "删除模型文件",
     "discardTitle": "丢弃已下载部分",
     "resume": "继续下载",

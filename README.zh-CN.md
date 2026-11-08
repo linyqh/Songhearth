@@ -6,10 +6,10 @@
 
 **本地运行的 AI 音乐生成桌面客户端**
 
-在 Apple Silicon 的 Metal GPU 上离线运行开源音乐模型，无需云端、无需订阅。<br/>
+在自己的 GPU 上离线运行开源音乐模型（Apple Silicon 的 Metal，或 Windows 上的 Vulkan），无需云端、无需订阅。<br/>
 内置本地 HTTP API 与 Agent Skill，可被 Claude Code / Codex 等 Agent 直接调用。
 
-![Platform](https://img.shields.io/badge/platform-macOS%20(Apple%20Silicon)-black?logo=apple)
+![Platform](https://img.shields.io/badge/platform-macOS%20(Apple%20Silicon)%20%7C%20Windows%20x64-black?logo=apple)
 ![Tauri](https://img.shields.io/badge/Tauri-2-24C8DB?logo=tauri&logoColor=white)
 ![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)
 ![Rust](https://img.shields.io/badge/Rust-stable-DEA584?logo=rust&logoColor=black)
@@ -33,23 +33,23 @@
 
 ## 特性
 
-- 🎼 **开始创作**：风格描述 + 歌词编辑（段落标记一键插入）、人声 / 纯音乐切换、模型选择（质量、速度、许可一目了然）、时长、种子锁定，以及高级选项（YuE2 乐谱规划、采样步数、反向提示词）。`⌘↩` 生成，草稿自动保存。
+- 🎼 **开始创作**：风格描述 + 歌词编辑（段落标记一键插入）、人声 / 纯音乐切换、模型选择（质量、速度、许可一目了然）、时长、种子锁定，以及高级选项（YuE2 乐谱规划、采样步数、反向提示词）。`⌘↩`（Windows 为 `Ctrl+↵`）生成，草稿自动保存。
 - ⏳ **任务队列**：按提交顺序依次执行，实时显示阶段、进度与剩余时间，可随时取消；后台完成时发送系统通知。
-- 🎧 **我的作品**：波形试听、点击波形跳转、收藏、重命名、搜索、复用参数、换种子再来一版、导出、在 Finder 中显示；失败任务显示 audio.cpp 的错误并可一键重试。
+- 🎧 **我的作品**：波形试听、点击波形跳转、收藏、重命名、搜索、复用参数、换种子再来一版、导出、在 Finder / 资源管理器中显示；失败任务显示 audio.cpp 的错误并可一键重试。
 - 📦 **模型管理**：8 路并行分段下载、断点续传、暂停 / 继续、镜像源（hf-mirror）、删除；根据本机内存提示是否吃紧。
 - 🤖 **接口与 Skill**：REST API 与发现文件自动生成；一键把 Skill 安装到 Claude Code / Codex / 任意目录。
 - 🌍 **多语言**：English / 简体中文，新增语言无需改代码。
-- 🎨 **原生观感**：macOS 液态玻璃风格，跟随系统强调色与深浅色。
+- 🎨 **原生观感**：macOS 液态玻璃风格，跟随系统强调色与深浅色；Windows 使用原生标题栏，同样跟随深浅色。
 
 ## 快速开始
 
-> 目前仅支持 **macOS（Apple Silicon）**。
+> 支持 **macOS（Apple Silicon）** 与 **Windows 10/11（x64）**。Windows 使用 audio.cpp 的 Vulkan 构建，NVIDIA、AMD、Intel 显卡均可（需较新的显卡驱动）。
 
-1. 安装并打开应用。首次启动若未找到 audio.cpp 引擎，会引导下载（约 35 MB）。
+1. 安装并打开应用。首次启动若未找到 audio.cpp 引擎，会引导下载（约 35–85 MB）。
 2. 在「模型」页下载一个模型（`yue2-3b` 仅 2.9 GB，适合上手）。
-3. 在「开始创作」输入风格描述和歌词，按 `⌘↩` 生成。
+3. 在「开始创作」输入风格描述和歌词，按 `⌘↩`（Windows 为 `Ctrl+↵`）生成。
 
-模型默认存放在 `~/Library/Application Support/com.songhearth.app/models`（可在设置中改为已有的 audio.cpp `models` 目录），作品默认保存到 `~/Music/Songhearth`。
+模型默认存放在应用数据目录（macOS：`~/Library/Application Support/com.songhearth.app/models`，Windows：`%LOCALAPPDATA%\com.songhearth.app\models`；可在设置中改为已有的 audio.cpp `models` 目录），作品默认保存到用户目录下的 `Music/Songhearth`。
 
 从源码构建见 [开发](#开发)。
 
@@ -71,7 +71,7 @@ API 默认监听 `0.0.0.0:17865`：本机用 `http://127.0.0.1:17865`，局域�
 
 > ⚠️ 默认**对局域网开放且不要求 Token**。在不受信任的网络中，请在界面里关闭局域网访问或开启 Bearer Token。
 
-地址与 Token 写入 `~/Library/Application Support/com.songhearth.app/api.json`（权限 0600）。完整接口见 [skills/songhearth/reference/api.md](skills/songhearth/reference/api.md)。
+地址与 Token 写入应用数据目录下的 `api.json`（macOS：`~/Library/Application Support/com.songhearth.app/`，Windows：`%LOCALAPPDATA%\com.songhearth.app\`）。完整接口见 [skills/songhearth/reference/api.md](skills/songhearth/reference/api.md)。
 
 ```bash
 python3 skills/songhearth/scripts/songhearth.py status
@@ -80,7 +80,7 @@ python3 skills/songhearth/scripts/songhearth.py generate \
   --lyrics-file lyrics.txt --title "夏夜" --out ./xiaye.wav
 ```
 
-客户端零依赖，自动读取发现文件；应用未运行时会尝试用 `open -b com.songhearth.app` 启动它。
+客户端零依赖，自动读取发现文件；应用未运行时会尝试启动它（macOS 用 `open -b com.songhearth.app`，Windows 用 `%LOCALAPPDATA%\Songhearth` 下的当前用户安装）。
 
 ## 架构
 
@@ -98,9 +98,9 @@ src-tauri/src/
 skills/songhearth/        Agent Skill：SKILL.md、零依赖 Python 客户端、API 文档
 ```
 
-每个任务启动一次 `audiocpp_cli`（`--backend metal`），因此取消即终止进程、崩溃不会影响应用；代价是每次约 5–10 秒的模型加载。ETA 先按内置经验值估算，每完成一首后按实测速度自动校准。
+每个任务启动一次 `audiocpp_cli`（macOS 用 `--backend metal`，Windows 用 `vulkan`），因此取消即终止进程、崩溃不会影响应用；代价是每次约 5–10 秒的模型加载。ETA 先按内置经验值估算，每完成一首后按实测速度自动校准。
 
-引擎查找顺序：设置中的自定义路径 → 应用内置（`resources/engine`）→ 应用自动下载（`~/Library/Application Support/com.songhearth.app/engine/current`）→ `/opt/homebrew/bin`、`/usr/local/bin`。
+引擎查找顺序：设置中的自定义路径 → 应用内置（`resources/engine`）→ 应用自动下载（`<应用数据目录>/engine/current`）→ `/opt/homebrew/bin`、`/usr/local/bin`（仅 macOS）。
 
 ## 多语言（i18n）
 
@@ -128,13 +128,13 @@ src/i18n/
 
 ## 开发
 
-需要 Node 20+、Rust（stable）、Xcode 命令行工具。
+需要 Node 20+、Rust（stable）；macOS 需 Xcode 命令行工具，Windows 需 Visual Studio Build Tools（C++ 桌面开发工作负载）。
 
 ```bash
 npm install
-npm run fetch-engine        # 下载 audio.cpp v0.9.4 macOS 预编译包到 src-tauri/resources/engine（打包进 .app）
+npm run fetch-engine        # 下载当前系统对应的 audio.cpp 预编译包（macOS Metal / Windows Vulkan portable）到 src-tauri/resources/engine（打包进应用）
 npx tauri dev               # 开发
-npx tauri build             # 产出 .app / .dmg
+npx tauri build             # macOS：.app / .dmg · Windows：NSIS 安装包（.exe）
 ```
 
 | 命令 | 作用 |
@@ -142,6 +142,17 @@ npx tauri build             # 产出 .app / .dmg
 | `npm run typecheck` | TypeScript 类型检查 |
 | `npm run i18n:check` | 校验翻译文件 |
 | `cd src-tauri && cargo test --lib` | Rust 单元测试 |
+
+## 发版
+
+- **Windows**：发布（非草稿、非预发布的）GitHub Release 会触发 [`.github/workflows/release-windows.yml`](.github/workflows/release-windows.yml)，在 `windows-latest` 上构建 NSIS 安装包，并把 `*-setup.exe` 附加到该 Release。也可在 *Actions → Release (Windows) → Run workflow* 对已有 tag 手动触发。安装包未签名，首次运行会出现 SmartScreen 提示。
+- **macOS**：CI 不构建（macOS runner 费用高）。在本地打 `.dmg` 并上传到同一个 Release：
+
+```bash
+npm run fetch-engine
+npm run tauri build -- --bundles dmg
+gh release upload <tag> src-tauri/target/release/bundle/dmg/*.dmg
+```
 
 ## 致谢
 

@@ -6,6 +6,7 @@ import { Segmented, Slider } from "../components/ui";
 import { modelText } from "../i18n/catalog";
 import { backend } from "../lib/backend";
 import { formatBytes, formatDuration } from "../lib/format";
+import { ENTER_LABEL, isMod, MOD_LABEL } from "../lib/platform";
 import { useStore, type Draft } from "../lib/store";
 import type { Cot, GenParams } from "../lib/types";
 
@@ -101,7 +102,7 @@ export function CreatePage() {
   useEffect(() => {
     if (page !== "create") return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.metaKey && e.key === "Enter") {
+      if (isMod(e) && e.key === "Enter") {
         e.preventDefault();
         void generate();
       }
@@ -313,7 +314,7 @@ export function CreatePage() {
                 <button className="btn primary large block" disabled={!canGenerate} onClick={generate}>
                   {submitting ? <div className="spinner" /> : <Sparkles size={16} />}
                   {t("generate.button")}
-                  <span className="kbd">⌘↩</span>
+                  <span className="kbd">{MOD_LABEL}{ENTER_LABEL}</span>
                 </button>
               )}
               {problems.length > 0 && installed && (

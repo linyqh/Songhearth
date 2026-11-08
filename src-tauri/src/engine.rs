@@ -13,6 +13,9 @@ use crate::core::Core;
 use crate::msg::Coded;
 
 pub const ENGINE_VERSION: &str = "0.9.4";
+#[cfg(windows)]
+pub const CLI_NAME: &str = "audiocpp_cli.exe";
+#[cfg(not(windows))]
 pub const CLI_NAME: &str = "audiocpp_cli";
 
 #[derive(Clone, Serialize, Default)]
@@ -51,11 +54,9 @@ async fn probe(dir: &Path) -> Option<(String, Vec<String>)> {
     if !cli.is_file() {
         return None;
     }
-    let fut = tokio::process::Command::new(&cli)
-        .arg("--version")
-        .current_dir(dir)
-        .kill_on_drop(true)
-        .output();
+    let mut cmd = tokio::process::Command::new(&cli);
+    cmd.arg("--version").current_dir(dir).kill_on_drop(true);
+    let fut = crate::util::hide_console(&mut cmd).output();
     let out = tokio::time::timeout(Duration::from_secs(15), fut).await.ok()?.ok()?;
     let text = format!(
         "{}\n{}",
@@ -84,6 +85,8 @@ pub async fn refresh(core: &Arc<Core>) -> EngineStatus {
         candidates.push((bundled, "bundled"));
     }
     candidates.push((core.paths.engine_dir.join("current"), "downloaded"));
+    // Package-manager installs; Windows has no standard location.
+    #[cfg(not(windows))]
     for sys in ["/opt/homebrew/bin", "/usr/local/bin"] {
         candidates.push((PathBuf::from(sys), "system"));
     }
@@ -131,25 +134,31 @@ pub async fn refresh(core: &Arc<Core>) -> EngineStatus {
     snapshot
 }
 
+/// Prebuilt audio.cpp package for this platform. macOS ships the Metal build
+/// as .tar.gz; Windows ships the portable Vulkan build (any GPU vendor, CPU
+/// fallback inside) as .zip.
 fn release_url() -> String {
-    let arch = if cfg!(target_arch = "aarch64") { "arm64" } else { "x64" };
+    #[cfg(windows)]
+    let asset = "windows-x64-vulkan-portable.zip";
+    #[cfg(not(windows))]
+    let asset = if cfg!(target_arch = "aarch64") { "macos-arm64-metal.tar.gz" } else { "macos-x64-metal.tar.gz" };
     format!(
-        "https://github.com/0xShug0/audio.cpp/releases/download/v{v}/audio-v{v}-bin-macos-{arch}-metal.tar.gz",
+        "https://github.com/0xShug0/audio.cpp/releases/download/v{v}/audio-v{v}-bin-{asset}",
         v = ENGINE_VERSION
     )
 }
 
-/// Only the CLI, its model specs and the licence are needed at runtime.
+/// Only the CLI, its model specs, the licence and (on Windows) the runtime
+/// DLLs next to the executable are needed at runtime.
 fn wanted(path: &Path) -> bool {
-    let s = path.to_string_lossy();
+    let s = path.to_string_lossy().replace('\\', "/");
     let s = s.trim_start_matches("./");
-    s == CLI_NAME || s == "LICENSE" || s.starts_with("model_specs/") || s == "model_specs"
+    let runtime_dll = cfg!(windows) && !s.contains('/') && s.to_ascii_lowercase().ends_with(".dll");
+    s == CLI_NAME || s == "LICENSE" || s.starts_with("model_specs/") || s == "model_specs" || runtime_dll
 }
 
-fn extract(archive: &Path, dest: &Path) -> anyhow::Result<()> {
-    let staging = dest.with_extension("staging");
-    let _ = std::fs::remove_dir_all(&staging);
-    std::fs::create_dir_all(&staging)?;
+#[cfg(not(windows))]
+fn unpack_into(archive: &Path, staging: &Path) -> anyhow::Result<()> {
     let file = std::fs::File::open(archive)?;
     let mut tar = tar::Archive::new(flate2::read::GzDecoder::new(file));
     tar.set_preserve_permissions(true);
@@ -157,11 +166,38 @@ fn extract(archive: &Path, dest: &Path) -> anyhow::Result<()> {
         let mut entry = entry?;
         let path = entry.path()?.into_owned();
         if wanted(&path) {
-            entry.unpack_in(&staging)?;
+            entry.unpack_in(staging)?;
         }
     }
+    Ok(())
+}
+
+#[cfg(windows)]
+fn unpack_into(archive: &Path, staging: &Path) -> anyhow::Result<()> {
+    let mut zip = zip::ZipArchive::new(std::fs::File::open(archive)?)?;
+    for i in 0..zip.len() {
+        let mut entry = zip.by_index(i)?;
+        // `enclosed_name` rejects absolute and `..` paths (zip-slip).
+        let Some(rel) = entry.enclosed_name() else { continue };
+        if entry.is_dir() || !wanted(&rel) {
+            continue;
+        }
+        let target = staging.join(&rel);
+        if let Some(parent) = target.parent() {
+            std::fs::create_dir_all(parent)?;
+        }
+        std::io::copy(&mut entry, &mut std::fs::File::create(&target)?)?;
+    }
+    Ok(())
+}
+
+fn extract(archive: &Path, dest: &Path) -> anyhow::Result<()> {
+    let staging = dest.with_extension("staging");
+    let _ = std::fs::remove_dir_all(&staging);
+    std::fs::create_dir_all(&staging)?;
+    unpack_into(archive, &staging)?;
     if !staging.join(CLI_NAME).is_file() {
-        anyhow::bail!("the archive does not contain audiocpp_cli");
+        anyhow::bail!("the archive does not contain {CLI_NAME}");
     }
     let _ = std::fs::remove_dir_all(dest);
     std::fs::rename(&staging, dest)?;
@@ -205,7 +241,7 @@ pub async fn install(core: Arc<Core>) -> anyhow::Result<()> {
 
 async fn download_and_extract(core: &Arc<Core>, token: &CancellationToken) -> anyhow::Result<()> {
     std::fs::create_dir_all(&core.paths.engine_dir)?;
-    let archive = core.paths.engine_dir.join(format!("audio-v{ENGINE_VERSION}.tar.gz.part"));
+    let archive = core.paths.engine_dir.join(format!("audio-v{ENGINE_VERSION}.archive.part"));
     let resp = core.http.get(release_url()).send().await?.error_for_status()?;
     let total = resp.content_length().unwrap_or(0);
     core.engine.write().unwrap().total_bytes = total;

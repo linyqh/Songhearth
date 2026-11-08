@@ -1,11 +1,11 @@
 ---
 name: songhearth
-description: Generate songs, instrumentals and BGM locally on this Mac with the Songhearth app (audio.cpp + YuE2 / ACE-Step / MiniMax Music 3 / Stable Audio 3). Use when the user asks to compose, generate or render music, a song from lyrics, background music, a jingle, or to check/install local music models.
+description: Generate songs, instrumentals and BGM locally on this computer (macOS or Windows) with the Songhearth app (audio.cpp + YuE2 / ACE-Step / MiniMax Music 3 / Stable Audio 3). Use when the user asks to compose, generate or render music, a song from lyrics, background music, a jingle, or to check/install local music models.
 ---
 
 # Songhearth — local music generation
 
-Songhearth is a desktop app that runs open-weight music models locally and exposes an HTTP API (`127.0.0.1`, and the LAN by default). Use the bundled client; it finds the API URL (and token, if one is enabled) automatically from `~/Library/Application Support/com.songhearth.app/api.json` and launches the app if needed. To reach a Mac from another machine set `SONGHEARTH_URL=http://<mac-lan-ip>:17865` (and `SONGHEARTH_TOKEN` if required).
+Songhearth is a desktop app that runs open-weight music models locally and exposes an HTTP API (`127.0.0.1`, and the LAN by default). Use the bundled client; it finds the API URL (and token, if one is enabled) automatically from the app's `api.json` (macOS: `~/Library/Application Support/com.songhearth.app/api.json`; Windows: `%LOCALAPPDATA%\com.songhearth.app\api.json`) and launches the app if needed. To reach this computer from another machine set `SONGHEARTH_URL=http://<lan-ip>:17865` (and `SONGHEARTH_TOKEN` if required).
 
 ```bash
 python3 scripts/songhearth.py <command> [...]   # path relative to this skill folder
@@ -59,7 +59,7 @@ python3 scripts/songhearth.py generate --prompt "..." --no-wait
 python3 scripts/songhearth.py wait <id>
 ```
 
-## Timing expectations (Apple Silicon)
+## Timing expectations (Apple Silicon reference; other GPUs vary)
 
 Generation runs one job at a time; each job reloads the model (~10 s). Rough compute per minute of audio: Stable Audio ≈ seconds, ACE-Step ≈ 10–20 s, YuE2 ≈ 40–60 s (`--cot off`) to longer with `full`, MiniMax ≈ 1–2 min. Tell the user when a long song will take minutes; use `--no-wait` for batches.
 

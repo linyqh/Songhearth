@@ -14,8 +14,20 @@ use crate::jobs::{wants_vocals, Job, JobStatus};
 use crate::msg::Coded;
 use crate::util::{has_cjk, now_iso, sanitize_filename, unique_path, wav_peaks};
 
-/// Fixed overhead per run: Metal library init (~5 s) plus weight loading.
+/// Fixed overhead per run: GPU backend init (Metal library / Vulkan pipelines,
+/// ~5 s) plus weight loading.
 const LOAD_ESTIMATE: f64 = 10.0;
+
+/// Best GPU backend the engine build offers: Metal on macOS, Vulkan on the
+/// Windows package, CPU only if nothing else is compiled in. An empty list
+/// (old CLI that does not report backends) falls back to the platform default.
+fn pick_backend(available: &[String]) -> &'static str {
+    const PREFERENCE: [&str; 4] = ["metal", "cuda", "vulkan", "cpu"];
+    PREFERENCE
+        .into_iter()
+        .find(|b| available.iter().any(|a| a.eq_ignore_ascii_case(b)))
+        .unwrap_or(if cfg!(windows) { "vulkan" } else { "metal" })
+}
 
 pub async fn worker(core: Arc<Core>) {
     loop {
@@ -66,7 +78,7 @@ fn build_args(core: &Core, job: &Job, model: &ModelDef, out: &Path) -> Vec<Strin
         "--task".into(), "gen".into(),
         "--family".into(), model.family.into(),
         "--model".into(), model_path.to_string_lossy().into_owned(),
-        "--backend".into(), "metal".into(),
+        "--backend".into(), pick_backend(&core.engine.read().unwrap().backends).into(),
         "--threads".into(), settings.threads.to_string(),
         "--seed".into(), job.seed.to_string(),
         "--log".into(),
@@ -293,11 +305,12 @@ async fn execute(
     let args = build_args(core, job, model, out);
     let mut cmd = tokio::process::Command::new(cli);
     cmd.args(&args)
-        .current_dir(cli.parent().unwrap_or(Path::new("/")))
+        .current_dir(cli.parent().unwrap_or(Path::new(".")))
         .stdin(Stdio::null())
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
         .kill_on_drop(true);
+    crate::util::hide_console(&mut cmd);
     let mut child = match cmd.spawn() {
         Ok(c) => c,
         Err(e) => {
@@ -359,7 +372,7 @@ async fn execute(
                             phase = phase.max(ph);
                         }
                         if let Some(v) = metric(&line, "metrics.audio_duration_ms") { audio_ms = Some(v); }
-                        if !line.contains("ggml_metal") && !line.trim().is_empty() {
+                        if !line.contains("ggml_metal") && !line.contains("ggml_vulkan") && !line.trim().is_empty() {
                             tail.push(line);
                             if tail.len() > 200 { tail.drain(..100); }
                         }

@@ -1,7 +1,10 @@
 //! Model package downloads: parallel ranged requests, resumable via a
 //! sidecar state file, cancellable (= pause) at any point.
 
+#[cfg(unix)]
 use std::os::unix::fs::FileExt;
+#[cfg(windows)]
+use std::os::windows::fs::FileExt;
 use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicU64, Ordering};
 use std::sync::{Arc, Mutex};
@@ -18,6 +21,31 @@ use crate::msg::Coded;
 const SEGMENTS: u64 = 8;
 const MIN_SEGMENT: u64 = 16 * 1024 * 1024;
 const MAX_ATTEMPTS: u32 = 8;
+
+/// Positional write that does not rely on the shared file cursor, so the
+/// parallel segments can write one file concurrently.
+#[cfg(unix)]
+fn write_all_at(file: &std::fs::File, buf: &[u8], offset: u64) -> std::io::Result<()> {
+    file.write_all_at(buf, offset)
+}
+
+/// `seek_write` may write partially and moves the cursor, but each call
+/// carries its own offset, so concurrent segments stay independent.
+#[cfg(windows)]
+fn write_all_at(file: &std::fs::File, mut buf: &[u8], mut offset: u64) -> std::io::Result<()> {
+    while !buf.is_empty() {
+        match file.seek_write(buf, offset) {
+            Ok(0) => return Err(std::io::ErrorKind::WriteZero.into()),
+            Ok(n) => {
+                buf = &buf[n..];
+                offset += n as u64;
+            }
+            Err(e) if e.kind() == std::io::ErrorKind::Interrupted => {}
+            Err(e) => return Err(e),
+        }
+    }
+    Ok(())
+}
 
 #[derive(Clone, Serialize, Default)]
 #[serde(rename_all = "camelCase")]
@@ -397,7 +425,7 @@ async fn fetch_segment(
                 };
                 let remaining = (seg.end - offset) as usize;
                 let slice = &chunk[..chunk.len().min(remaining)];
-                file.write_all_at(slice, offset)?;
+                write_all_at(&file, slice, offset)?;
                 offset += slice.len() as u64;
                 done.fetch_add(slice.len() as u64, Ordering::Relaxed);
                 handle.downloaded.fetch_add(slice.len() as u64, Ordering::Relaxed);

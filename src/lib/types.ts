@@ -149,7 +149,7 @@ export interface SystemInfo {
   totalMemoryGb: number;
   chip: string;
   arch: string;
-  osVersion: string;
+  os: string;
 }
 
 export interface Paths {

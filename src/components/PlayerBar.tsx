@@ -38,7 +38,7 @@ export function PlayerBar() {
         <Waveform peaks={current.peaks} bars={120} progress={total ? time / total : 0} height={30} onSeek={(f) => seek(f * total)} />
       </div>
       <span className="time num">{formatDuration(total)}</span>
-      <button className="icon-btn" title={t("revealInFinder")} onClick={() => current.outputPath && revealItemInDir(current.outputPath)}>
+      <button className="icon-btn" title={t("revealInFolder")} onClick={() => current.outputPath && revealItemInDir(current.outputPath)}>
         <FolderOpen size={16} />
       </button>
       <button className="icon-btn" title={t("player.close")} onClick={stop}>

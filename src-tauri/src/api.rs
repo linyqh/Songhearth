@@ -287,8 +287,7 @@ pub async fn restart(core: Arc<Core>) {
                 "version": env!("CARGO_PKG_VERSION"),
             });
             if write_json(&core.paths.api_info, &info).is_ok() {
-                use std::os::unix::fs::PermissionsExt;
-                let _ = std::fs::set_permissions(&core.paths.api_info, std::fs::Permissions::from_mode(0o600));
+                let _ = crate::util::set_unix_mode(&core.paths.api_info, 0o600);
             }
             *core.api_status.write().unwrap() = ApiStatus { running: true, url: Some(url), lan_url, error: None };
         }

@@ -1,6 +1,6 @@
 # Songhearth HTTP API (v1)
 
-Base URL: `http://127.0.0.1:17865` locally, or `http://<mac-lan-ip>:17865` from other devices on the same network (listening on all interfaces is the default; it can be limited to loopback in the app: 接口 → 允许局域网访问). The port is configurable. The local URL (and the token, if enabled) is written to `~/Library/Application Support/com.songhearth.app/api.json` (mode 0600) while the API runs.
+Base URL: `http://127.0.0.1:17865` locally, or `http://<lan-ip>:17865` from other devices on the same network (listening on all interfaces is the default; it can be limited to loopback in the app: 接口 → 允许局域网访问). The port is configurable. The local URL (and the token, if enabled) is written to `api.json` while the API runs: `~/Library/Application Support/com.songhearth.app/api.json` (mode 0600) on macOS, `%LOCALAPPDATA%\com.songhearth.app\api.json` on Windows.
 
 Authentication: none by default. If 要求 Token is switched on in the app, send `Authorization: Bearer <token>` (or `X-Api-Key: <token>`) on every endpoint except `/api/v1/health`.
 
@@ -63,7 +63,7 @@ Jobs run sequentially in creation order (one GPU job at a time).
 ## curl
 
 ```bash
-TOKEN=$(python3 -c 'import json,os;print(json.load(open(os.path.expanduser("~/Library/Application Support/com.songhearth.app/api.json"))).get("token") or "")')  # empty when token is off
+TOKEN=$(python3 -c 'import json,os,sys;d={"win32":os.environ.get("LOCALAPPDATA",""),"darwin":os.path.expanduser("~/Library/Application Support")}.get(sys.platform,os.path.expanduser("~/.local/share"));print(json.load(open(os.path.join(d,"com.songhearth.app","api.json"))).get("token") or "")')  # empty when token is off
 AUTH=${TOKEN:+-H "Authorization: Bearer $TOKEN"}
 ID=$(curl -s $AUTH -H 'Content-Type: application/json' \
   -d '{"prompt":"lofi hip hop, rhodes piano, 80 BPM","instrumental":true,"duration":30}' \

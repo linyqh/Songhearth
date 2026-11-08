@@ -199,7 +199,7 @@ export function SettingsPage() {
             <div className="row-label">
               <div className="title">Songhearth {boot.version}</div>
               <div className="sub">
-                {boot.system.chip} · {boot.system.totalMemoryGb} GB · macOS {boot.system.osVersion}
+                {boot.system.chip} · {boot.system.totalMemoryGb} GB · {boot.system.os}
               </div>
             </div>
             <button className="btn small" onClick={() => revealItemInDir(boot.paths.dataDir)}>
@@ -222,7 +222,7 @@ function DirRow({ title, path, isDefault, onPick, onReset }: { title: string; pa
         </div>
         <div className="sub mono selectable">{path}</div>
       </div>
-      <button className="icon-btn" title={t("shell:revealInFinder")} onClick={() => revealItemInDir(path)}>
+      <button className="icon-btn" title={t("shell:revealInFolder")} onClick={() => revealItemInDir(path)}>
         <FolderOpen size={15} />
       </button>
       {!isDefault && (

@@ -21,7 +21,7 @@
   "sidebar": {
     "engineInstalling": "正在安装引擎…",
     "engineMissing": "引擎未安装",
-    "localInference": "Metal · 本地推理",
+    "localInference": "GPU · 本地推理",
     "stageEta": "{{stage}} · {{eta}}",
     "queuedMore_other": "队列中还有 {{count}} 首"
   },
@@ -31,7 +31,7 @@
     "viewDetails": "查看作品详情",
     "close": "关闭播放器"
   },
-  "revealInFinder": "在 Finder 中显示",
+  "revealInFolder": "在文件夹中显示",
   "errorBoundary": {
     "title": "页面出错了"
   },
@@ -52,7 +52,7 @@
     "downloadingProgress": "正在下载 audio.cpp · {{done}} / {{total}}",
     "recheck": "重新检测",
     "needed": "需要 audio.cpp 推理引擎",
-    "neededBody": "所有模型都通过 audio.cpp 在本机 GPU（Metal）上运行，不上传任何数据。官方预编译包约 35 MB。",
+    "neededBody": "所有模型都通过 audio.cpp 在本机 GPU 上运行，不上传任何数据。官方预编译包一次性下载，不超过 100 MB。",
     "downloadInstall": "下载并安装引擎",
     "chooseExisting": "选择已有安装…"
   },

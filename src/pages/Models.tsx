@@ -123,7 +123,7 @@ function ModelCard({ model: m, memoryGb }: { model: Model; memoryGb: number }) {
         ) : st.state === "installed" ? (
           <>
             <button className="btn small" onClick={() => revealItemInDir(st.path)}>
-              <FolderOpen size={13} /> {t("card.showInFinder")}
+              <FolderOpen size={13} /> {t("card.showInFolder")}
             </button>
             <div className="grow" />
             <button className="icon-btn" title={t("card.deleteTitle")} onClick={() => setConfirm(true)}>

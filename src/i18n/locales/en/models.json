@@ -17,8 +17,8 @@
   "page": {
     "title": "Models",
     "subtitle": "{{size}} used",
-    "system": "{{chip}} · {{memory}} GB unified memory",
-    "memoryPlenty": "All models can run on this Mac. Closing memory-hungry apps while generating is recommended.",
+    "system": "{{chip}} · {{memory}} GB memory",
+    "memoryPlenty": "All models can run on this computer. Closing memory-hungry apps while generating is recommended.",
     "memoryOk": "Most models will run; memory gets tight when ACE-Step or MiniMax generate long songs.",
     "memoryLow": "Memory is limited; Stable Audio 3 Small or YuE2 (Q4) is recommended.",
     "footer": "Model files come from the official audio.cpp GGUF packages on Hugging Face, and downloads can resume. If downloads are slow, switch to a mirror in Settings → Download source."
@@ -36,7 +36,7 @@
     "durationRange": "{{min}}–{{max}} s",
     "license": "{{name}}: {{note}}",
     "progress": "{{done}} / {{total}} · {{speed}}",
-    "showInFinder": "Show in Finder",
+    "showInFolder": "Show in folder",
     "deleteTitle": "Delete model files",
     "discardTitle": "Discard the downloaded part",
     "resume": "Resume download",

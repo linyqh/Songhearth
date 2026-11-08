@@ -21,7 +21,7 @@
   "sidebar": {
     "engineInstalling": "Installing engine…",
     "engineMissing": "Engine not installed",
-    "localInference": "Metal · On-device inference",
+    "localInference": "GPU · On-device inference",
     "stageEta": "{{stage}} · {{eta}}",
     "queuedMore_one": "{{count}} more song in the queue",
     "queuedMore_other": "{{count}} more songs in the queue"
@@ -32,7 +32,7 @@
     "viewDetails": "View song details",
     "close": "Close player"
   },
-  "revealInFinder": "Show in Finder",
+  "revealInFolder": "Show in folder",
   "errorBoundary": {
     "title": "Something went wrong on this page"
   },
@@ -53,7 +53,7 @@
     "downloadingProgress": "Downloading audio.cpp · {{done}} / {{total}}",
     "recheck": "Check again",
     "needed": "The audio.cpp inference engine is required",
-    "neededBody": "All models run on this Mac’s GPU (Metal) through audio.cpp, and no data is uploaded. The official prebuilt package is about 35 MB.",
+    "neededBody": "All models run on this computer’s GPU through audio.cpp, and no data is uploaded. The official prebuilt package is a one-time download of under 100 MB.",
     "downloadInstall": "Download and install engine",
     "chooseExisting": "Choose an existing install…"
   },
