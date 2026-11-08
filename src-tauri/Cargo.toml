@@ -1,6 +1,6 @@
 [package]
 name = "songhearth"
-version = "0.1.0"
+version = "0.2.0"
 description = "Local music generation desktop client powered by audio.cpp"
 edition = "2021"
 
