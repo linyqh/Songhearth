@@ -1,0 +1,64 @@
+{
+  "notification": {
+    "title": "音乐生成完成",
+    "body": "《{{title}}》已保存到“我的作品”"
+  },
+  "nav": {
+    "create": "开始创作",
+    "library": "我的作品",
+    "models": "模型",
+    "api": "接口与 Skill",
+    "settings": "设置",
+    "developers": "开发者"
+  },
+  "app": {
+    "initFailed": "应用初始化失败",
+    "welcome": {
+      "title": "欢迎使用 Songhearth",
+      "body": "本地 AI 音乐工坊：歌词、风格、一键成曲。开始之前，先安装推理引擎。"
+    }
+  },
+  "sidebar": {
+    "engineInstalling": "正在安装引擎…",
+    "engineMissing": "引擎未安装",
+    "localInference": "Metal · 本地推理",
+    "stageEta": "{{stage}} · {{eta}}",
+    "queuedMore_other": "队列中还有 {{count}} 首"
+  },
+  "player": {
+    "play": "播放",
+    "pause": "暂停",
+    "viewDetails": "查看作品详情",
+    "close": "关闭播放器"
+  },
+  "revealInFinder": "在 Finder 中显示",
+  "errorBoundary": {
+    "title": "页面出错了"
+  },
+  "license": {
+    "yes": "可商用",
+    "conditional": "有条件商用",
+    "no": "仅非商用"
+  },
+  "engine": {
+    "source": {
+      "bundled": "应用内置",
+      "downloaded": "自动下载",
+      "custom": "自定义路径",
+      "system": "系统安装"
+    },
+    "chooseFolderTitle": "选择包含 audiocpp_cli 的文件夹",
+    "downloading": "正在下载 audio.cpp",
+    "downloadingProgress": "正在下载 audio.cpp · {{done}} / {{total}}",
+    "recheck": "重新检测",
+    "needed": "需要 audio.cpp 推理引擎",
+    "neededBody": "所有模型都通过 audio.cpp 在本机 GPU（Metal）上运行，不上传任何数据。官方预编译包约 35 MB。",
+    "downloadInstall": "下载并安装引擎",
+    "chooseExisting": "选择已有安装…"
+  },
+  "format": {
+    "justNow": "刚刚",
+    "etaSeconds_other": "约 {{count}} 秒",
+    "etaMinutes_other": "约 {{count}} 分钟"
+  }
+}

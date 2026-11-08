@@ -1,0 +1,46 @@
+{
+  "title": "接口与 Skill",
+  "subtitle": "让其他 Agent 与脚本调用本机音乐生成",
+  "http": {
+    "title": "HTTP 接口",
+    "enable": "启用 API",
+    "running": "● 运行中 · {{url}}",
+    "disabled": "已停用",
+    "lan": "允许局域网访问",
+    "lanOn": "同一网络下的设备可通过本机 IP 调用，没有 Token 时无需任何验证",
+    "lanOff": "仅本机（127.0.0.1）可访问",
+    "port": "端口",
+    "requireToken": "要求 Token",
+    "requireTokenHint": "默认关闭：知道地址的人都能生成音乐；开启后调用需带 Token",
+    "token": "Token",
+    "hideToken": "隐藏",
+    "regenerate": "重新生成（旧 Token 立即失效）",
+    "tokenRegenerated": "已生成新 Token",
+    "discoveryFile": "发现文件",
+    "discoveryHint": "Skill 客户端自动读取地址与 Token"
+  },
+  "quickStart": {
+    "title": "快速试用"
+  },
+  "endpoints": {
+    "health": "健康检查、引擎与已安装模型（无需 Token）",
+    "models": "模型列表与下载状态",
+    "install": "下载 / 继续下载模型",
+    "create": "提交生成任务（返回 id）",
+    "wait": "长轮询直到完成",
+    "audio": "下载 WAV",
+    "cancel": "取消任务",
+    "history": "历史记录"
+  },
+  "skill": {
+    "title": "Agent Skill",
+    "description": "Skill 包含使用说明（SKILL.md）、零依赖 Python 客户端与接口文档。安装后，Claude Code、Codex 等 Agent 可直接“帮我写一首歌”。",
+    "installed": "Skill 已安装到 {{path}}",
+    "otherLocation": "其他位置",
+    "otherLocationHint": "选择 Agent 的 skills 目录，会在其中创建 songhearth 文件夹",
+    "chooseFolderTitle": "选择 skills 目录",
+    "previewHint": "查看 Agent 将读到的说明",
+    "preview": "预览",
+    "collapse": "收起"
+  }
+}

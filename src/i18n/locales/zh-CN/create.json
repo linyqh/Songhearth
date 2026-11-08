@@ -1,0 +1,93 @@
+{
+  "title": "开始创作",
+  "subtitle": "写下风格与歌词，在本机生成完整歌曲",
+  "titlePlaceholder": "未命名作品",
+  "style": {
+    "label": "风格描述",
+    "placeholderFallback": "流派、乐器、情绪、人声，用逗号分隔",
+    "useExample": "使用示例"
+  },
+  "presets": {
+    "mandarinPop": "华语流行",
+    "cityPop": "城市流行",
+    "lofi": "Lo-fi",
+    "rock": "摇滚",
+    "folk": "民谣",
+    "electronic": "电子",
+    "jazz": "爵士",
+    "guofeng": "古风",
+    "rap": "说唱",
+    "cinematic": "电影配乐",
+    "ambient": "氛围",
+    "femaleVocal": "女声",
+    "maleVocal": "男声"
+  },
+  "lyrics": {
+    "label": "歌词",
+    "modeVocals": "人声歌曲",
+    "modeInstrumental": "纯音乐",
+    "insertTagTitle": "在光标处插入段落标记",
+    "placeholder": "[Verse]\n晚风吹过旧街的路灯\n我把心事折成纸飞机\n\n[Chorus]\n就让今夜的星光\n陪我唱完这首歌",
+    "hint": "每段用 [Verse]、[Chorus] 等标记单独成行，歌词语言即演唱语言。",
+    "lineCount_other": "{{count}} 行",
+    "charCount_other": "{{count}} 字",
+    "stats": "{{lines}} · {{chars}}"
+  },
+  "instrumental": {
+    "title": "纯音乐模式",
+    "note": "不演唱歌词，适合 BGM、配乐与氛围音乐。已写的歌词会保留，切回人声即可继续编辑。"
+  },
+  "model": {
+    "label": "模型"
+  },
+  "duration": {
+    "label": "时长",
+    "labelMax": "最长时长",
+    "maxHint": "实际长度由歌词决定，这里是上限。"
+  },
+  "advanced": {
+    "toggle": "高级选项"
+  },
+  "cot": {
+    "label": "乐谱规划",
+    "off": "关闭",
+    "offTitle": "跳过乐谱，速度约快一倍",
+    "melody": "旋律",
+    "full": "旋律+和弦",
+    "hint": "先写出旋律与和弦再演唱，结构更完整；关闭可显著加快生成。"
+  },
+  "steps": {
+    "label": "采样步数"
+  },
+  "negative": {
+    "label": "反向提示词",
+    "placeholder": "例如：noise, distortion, low quality"
+  },
+  "seed": {
+    "label": "随机种子",
+    "locked": "固定",
+    "random": "每次随机",
+    "placeholder": "随机",
+    "reroll": "换一个种子",
+    "lockedTitle": "已固定：相同参数可复现结果",
+    "unlockedTitle": "未固定：每次生成都会换新种子"
+  },
+  "generate": {
+    "button": "生成音乐",
+    "downloading": "下载中 {{percent}}%",
+    "download": "下载模型 · {{size}}",
+    "downloadStarted": "开始下载 {{name}}",
+    "needs": "还需要：{{items}}",
+    "firstRun": "首次使用需下载模型，下载完成后即可生成。"
+  },
+  "problems": {
+    "prompt": "填写风格描述",
+    "lyricsRequired": "{{name}} 需要歌词",
+    "lyrics": "填写歌词，或切换到纯音乐",
+    "engine": "安装 audio.cpp 引擎"
+  },
+  "toast": {
+    "queued_other": "《{{title}}》已加入队列，前面还有 {{count}} 首",
+    "started": "开始生成《{{title}}》"
+  }
+}

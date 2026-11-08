@@ -1,0 +1,42 @@
+{
+  "yue2_3b": {
+    "summary": "开源歌曲质量第一梯队，人声与伴奏一次生成",
+    "description": "在 WildSongBench 上取得开源最高分（作者自测，可与 Suno v5 对比）。支持中文/英文歌词，留空歌词即生成纯音乐。使用 Q4 量化，Apple Silicon 上约占 10 GB 内存，歌曲长度由歌词决定。",
+    "tags": ["人声", "纯音乐", "中文", "英文"],
+    "languages": "中文、英文",
+    "promptHint": "风格用英文标签效果最佳，用逗号分隔：语种、流派、乐器、人声。",
+    "licenseNote": "仅限非商业用途"
+  },
+  "ace_step_1_5_turbo": {
+    "summary": "速度最快，MIT 许可可商用，50+ 种歌词语言",
+    "description": "规划器 + 扩散模型的混合架构，8 步出歌。训练数据为授权/无版权/合成音乐，生成结果可商用。BF16 完整版（量化会破坏规划器采样），体积约 10 GB。",
+    "tags": ["人声", "纯音乐", "多语言", "可商用"],
+    "languages": "50+ 种语言",
+    "promptHint": "用自然语言描述风格、情绪、乐器和人声，中英文均可。",
+    "licenseNote": "可商用"
+  },
+  "minimax_music_3": {
+    "summary": "第三方盲测开源第一，完整歌曲最长 5 分钟",
+    "description": "Artificial Analysis 人声榜上唯一的开源模型（Elo 1000）。8B 全局 LLM + 0.6B 局部 LLM + Flow Matching，32 kHz 立体声。必须提供歌词，适合结构完整的流行歌曲。",
+    "tags": ["人声", "中文", "英文", "长歌曲"],
+    "languages": "自动识别",
+    "promptHint": "写一段详细的音乐描述：流派、BPM、调性、情绪走向、人声与编曲。",
+    "licenseNote": "产品界面需展示模型名；年收入超 2000 万美元需书面授权；公开内容需标注 AI 生成"
+  },
+  "stable_audio_3_medium": {
+    "summary": "纯音乐质量最佳，几秒生成整首 BGM",
+    "description": "CMU Music Arena 器乐榜第 2（仅次于 Lyria 3 Pro）。只生成器乐，不支持歌词。适合配乐、BGM、氛围音乐，提示词需使用英文。",
+    "tags": ["纯音乐", "BGM", "英文提示词"],
+    "languages": "英文提示词",
+    "promptHint": "用英文描述流派、乐器、情绪、BPM，例如 cinematic, 90 BPM。",
+    "licenseNote": "年收入低于 100 万美元可免费商用，以官方许可为准"
+  },
+  "stable_audio_3_small": {
+    "summary": "最轻量，1.7 GB，适合快速出 Demo 与循环",
+    "description": "Stable Audio 3 的小号音乐模型，约 4 GB 内存即可运行，速度极快，质量低于 Medium。只生成器乐，提示词需使用英文。",
+    "tags": ["纯音乐", "轻量", "英文提示词"],
+    "languages": "英文提示词",
+    "promptHint": "用英文描述流派、乐器、情绪、BPM。",
+    "licenseNote": "年收入低于 100 万美元可免费商用，以官方许可为准"
+  }
+}

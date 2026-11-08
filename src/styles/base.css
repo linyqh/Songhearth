@@ -1,0 +1,258 @@
+/* Design tokens: macOS 27 "Liquid Glass" — layered translucent materials over
+   native window vibrancy, system font, accent-driven controls. */
+
+:root {
+  color-scheme: light dark;
+  --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Hiragino Sans GB", system-ui, sans-serif;
+  --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang SC", system-ui, sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, monospace;
+
+  --accent: #0a7aff;
+  --accent-contrast: #fff;
+  --accent-soft: color-mix(in srgb, var(--accent) 14%, transparent);
+  --green: #30c75a;
+  --orange: #ff9500;
+  --red: #ff3b30;
+  --purple: #af52de;
+  --pink: #ff2d55;
+  --teal: #30b0c7;
+
+  --label: rgba(0, 0, 0, 0.86);
+  --label-2: rgba(0, 0, 0, 0.55);
+  --label-3: rgba(0, 0, 0, 0.32);
+  --fill: rgba(120, 120, 128, 0.1);
+  --fill-2: rgba(120, 120, 128, 0.16);
+  --fill-3: rgba(120, 120, 128, 0.24);
+  --hairline: rgba(0, 0, 0, 0.09);
+  --field-border: rgba(60, 60, 67, 0.2);
+  --field-border-focus: rgba(60, 60, 67, 0.42);
+  --separator: rgba(60, 60, 67, 0.12);
+
+  /* Bottom layer: native vibrancy shows through; only a light tint. */
+  --window: rgba(236, 236, 240, 0.38);
+  /* Top layer: the raised content panel and the cards inside it. */
+  --content: #f8f8fa;
+  --content-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.05), 0 8px 30px rgba(0, 0, 0, 0.08);
+  --pane: #ffffff;
+  --glass: rgba(255, 255, 255, 0.52);
+  --glass-strong: rgba(255, 255, 255, 0.78);
+  --glass-edge: rgba(255, 255, 255, 0.85);
+  --glass-shadow: 0 0.5px 0 rgba(255, 255, 255, 0.9) inset, 0 0 0 0.5px rgba(0, 0, 0, 0.07),
+    0 8px 28px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.06);
+  --raised-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.08), 0 4px 14px rgba(0, 0, 0, 0.05);
+  --control: rgba(255, 255, 255, 0.9);
+  --input: rgba(255, 255, 255, 0.7);
+
+  --radius-xl: 22px;
+  --radius-lg: 16px;
+  --radius: 11px;
+  --radius-sm: 7px;
+  --blur: saturate(180%) blur(28px);
+}
+
+@supports (color: AccentColor) {
+  :root {
+    --accent: AccentColor;
+    --accent-contrast: AccentColorText;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --accent: #0a84ff;
+    --label: rgba(255, 255, 255, 0.9);
+    --label-2: rgba(235, 235, 245, 0.58);
+    --label-3: rgba(235, 235, 245, 0.3);
+    --fill: rgba(120, 120, 128, 0.2);
+    --fill-2: rgba(120, 120, 128, 0.28);
+    --fill-3: rgba(120, 120, 128, 0.36);
+    --hairline: rgba(255, 255, 255, 0.1);
+    --field-border: rgba(255, 255, 255, 0.16);
+    --field-border-focus: rgba(255, 255, 255, 0.36);
+    --separator: rgba(84, 84, 88, 0.45);
+    --window: rgba(30, 30, 32, 0.42);
+    --content: #1e1e20;
+    --content-shadow: 0 0 0 0.5px rgba(255, 255, 255, 0.09), 0 1px 3px rgba(0, 0, 0, 0.4), 0 10px 34px rgba(0, 0, 0, 0.4);
+    --pane: #2a2a2d;
+    --glass: rgba(60, 60, 64, 0.42);
+    --glass-strong: rgba(58, 58, 62, 0.78);
+    --glass-edge: rgba(255, 255, 255, 0.14);
+    --glass-shadow: 0 0.5px 0 rgba(255, 255, 255, 0.12) inset, 0 0 0 0.5px rgba(0, 0, 0, 0.5),
+      0 10px 30px rgba(0, 0, 0, 0.35);
+    --raised-shadow: 0 0 0 0.5px rgba(255, 255, 255, 0.08), 0 1px 2px rgba(0, 0, 0, 0.4), 0 4px 14px rgba(0, 0, 0, 0.25);
+    --control: rgba(255, 255, 255, 0.12);
+    --input: rgba(0, 0, 0, 0.18);
+  }
+  @supports (color: AccentColor) {
+    :root { --accent: AccentColor; }
+  }
+}
+
+* { box-sizing: border-box; }
+
+html, body, #root {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: transparent;
+}
+
+body {
+  font-family: var(--font);
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--label);
+  -webkit-font-smoothing: antialiased;
+  -webkit-user-select: none;
+  user-select: none;
+  cursor: default;
+  letter-spacing: -0.003em;
+}
+
+input, textarea, select, button { font: inherit; color: inherit; }
+textarea, input[type="text"], input[type="number"], input[type="password"], [contenteditable] {
+  -webkit-user-select: text;
+  user-select: text;
+}
+.selectable { -webkit-user-select: text; user-select: text; cursor: text; }
+
+::selection { background: color-mix(in srgb, var(--accent) 30%, transparent); }
+
+/* Overlay scrollbars like macOS. */
+::-webkit-scrollbar { width: 11px; height: 11px; }
+::-webkit-scrollbar-thumb {
+  background: var(--fill-3);
+  border-radius: 10px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover { background-color: var(--label-3); }
+::-webkit-scrollbar-track { background: transparent; }
+
+:focus { outline: none; }
+:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--accent) 45%, transparent);
+  outline-offset: 1px;
+  border-radius: 8px;
+}
+/* Text inputs show focus through their border colour only, no ring. */
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: none;
+  border-radius: inherit;
+}
+
+/* ---------- App shell ---------- */
+
+.app {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  height: 100%;
+  background: var(--window);
+}
+
+/* Sidebar sits on the bottom (vibrancy) layer: no surface of its own. */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.sidebar-top { height: 40px; flex: none; }
+.brand { padding: 0 14px 8px 16px; flex: none; }
+.wordmark { display: block; width: 176px; height: auto; overflow: visible; pointer-events: none; }
+
+.sidebar nav { padding: 2px 10px; display: flex; flex-direction: column; gap: 1px; }
+
+.nav-heading {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--label-3);
+  padding: 14px 10px 5px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  height: 32px;
+  padding: 0 10px;
+  border-radius: 9px;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  font-size: 13px;
+  color: var(--label);
+  transition: background 0.15s;
+}
+/* Icons share the label colour (currentColor), not the accent. */
+.nav-item svg { color: inherit; flex: none; opacity: 0.85; }
+.nav-item.active svg { opacity: 1; }
+.nav-item:hover { background: var(--fill); }
+.nav-item.active { background: var(--fill-2); font-weight: 500; }
+.nav-item .count {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--label-2);
+  font-variant-numeric: tabular-nums;
+}
+.nav-item .count.live {
+  background: var(--accent);
+  color: var(--accent-contrast);
+  border-radius: 10px;
+  padding: 0 7px;
+  line-height: 17px;
+}
+
+.sidebar-foot { margin-top: auto; padding: 10px; display: flex; flex-direction: column; gap: 8px; }
+
+/* Content panel floats above the sidebar layer. */
+.main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  position: relative;
+  margin: 2px 2px 2px 0;
+  border-radius: 14px;
+  background: var(--content);
+  box-shadow: var(--content-shadow);
+  overflow: hidden;
+}
+
+.toolbar {
+  height: 54px;
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 18px 0 22px;
+}
+.toolbar h1 {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 650;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+.toolbar .subtitle { color: var(--label-2); font-size: 12px; }
+.toolbar .spacer { flex: 1; align-self: stretch; }
+
+.content {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 4px 22px 28px;
+}
+
+.page-enter { animation: page-in 0.24s cubic-bezier(0.2, 0.8, 0.2, 1); }
+@keyframes page-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}

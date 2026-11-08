@@ -1,0 +1,49 @@
+{
+  "picker": {
+    "select": "Choose a model",
+    "ariaLabel": "Models",
+    "downloaded": "Downloaded",
+    "incomplete": "Incomplete",
+    "recommended": "Recommended",
+    "onlyInstrumental": "Instrumental only; available after switching mode",
+    "needsLyrics": "Needs lyrics; available after switching to vocals",
+    "quality": "Quality",
+    "speed": "Speed",
+    "license": "{{name}}: {{note}}",
+    "partialProgress": "{{percent}}% downloaded",
+    "needsDownload": "Download required · about {{memory}} GB of memory",
+    "resume": "Resume download"
+  },
+  "page": {
+    "title": "Models",
+    "subtitle": "{{size}} used",
+    "system": "{{chip}} · {{memory}} GB unified memory",
+    "memoryPlenty": "All models can run on this Mac. Closing memory-hungry apps while generating is recommended.",
+    "memoryOk": "Most models will run; memory gets tight when ACE-Step or MiniMax generate long songs.",
+    "memoryLow": "Memory is limited; Stable Audio 3 Small or YuE2 (Q4) is recommended.",
+    "footer": "Model files come from the official audio.cpp GGUF packages on Hugging Face, and downloads can resume. If downloads are slow, switch to a mirror in Settings → Download source."
+  },
+  "card": {
+    "installed": "Installed",
+    "quality": "Quality",
+    "speed": "Speed",
+    "size": "Size",
+    "memory": "Memory",
+    "memoryValue": "≈ {{memory}} GB",
+    "memoryTight": "≈ {{memory}} GB (tight)",
+    "languages": "Languages",
+    "duration": "Duration",
+    "durationRange": "{{min}}–{{max}} s",
+    "license": "{{name}}: {{note}}",
+    "progress": "{{done}} / {{total}} · {{speed}}",
+    "showInFinder": "Show in Finder",
+    "deleteTitle": "Delete model files",
+    "discardTitle": "Discard the downloaded part",
+    "resume": "Resume download",
+    "partialProgress": "{{percent}}% downloaded; can resume",
+    "download": "Download · {{size}}",
+    "deleteTitleConfirm": "Delete {{name}}?",
+    "deleteBody": "This frees about {{size}} of disk space. Songs you have already generated are not affected, and you can download the model again later.",
+    "deleted": "Deleted {{name}}"
+  }
+}

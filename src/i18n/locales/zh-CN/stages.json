@@ -1,0 +1,14 @@
+{
+  "queued": "排队中",
+  "starting": "启动引擎",
+  "loading": "加载模型",
+  "composing": "谱写旋律与歌声",
+  "generating": "生成音乐",
+  "rendering": "渲染声学细节",
+  "decoding": "解码音频",
+  "done": "完成",
+  "failed": "失败",
+  "cancelled": "已取消",
+  "cancelling": "正在取消…",
+  "interrupted": "已中断"
+}

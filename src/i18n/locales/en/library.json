@@ -1,0 +1,88 @@
+{
+  "title": "My Songs",
+  "totalSongs_one": "{{count}} song",
+  "totalSongs_other": "{{count}} songs",
+  "sectionCount_one": "{{count}} song",
+  "sectionCount_other": "{{count}} songs",
+  "filters": {
+    "favorites": "Favorites",
+    "active": "Active",
+    "activeCount": "Active {{count}}",
+    "failed": "Failed"
+  },
+  "search": {
+    "placeholder": "Search title, style, lyrics",
+    "clear": "Clear search"
+  },
+  "empty": {
+    "title": "No songs yet",
+    "cta": "Create your first song",
+    "body": "Generated songs appear here as cards. Open one to see details, listen, export, or make another version.",
+    "noMatchTitle": "No matching songs",
+    "noMatchBody": "Try a different keyword, or switch to “{{all}}”."
+  },
+  "groups": {
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "last7Days": "Last 7 days"
+  },
+  "card": {
+    "queued": "Queued · #{{position}}",
+    "failed": "Failed · click for details",
+    "cancelled": "Cancelled"
+  },
+  "detail": {
+    "close": "Close (Esc)",
+    "previous": "Previous song (←)",
+    "next": "Next song (→)",
+    "rename": "Click to rename",
+    "kindVocals": "With vocals",
+    "kindInstrumental": "Instrumental",
+    "reuse": "Reuse settings",
+    "another": "Make another version",
+    "export": "Export…",
+    "cancelJob": "Cancel generation",
+    "editParams": "Edit settings",
+    "favorite": "Add to favorites",
+    "unfavorite": "Remove from favorites",
+    "exportFilter": "WAV audio",
+    "confirmDelete": {
+      "title": "Delete this song?",
+      "alsoFile": "Also delete the audio file"
+    },
+    "queuedWaiting": "Waiting in the queue. It starts automatically when the previous song finishes.",
+    "remaining": "{{eta}} left",
+    "failedTitle": "Generation failed",
+    "cancelledTitle": "Cancelled",
+    "meta": {
+      "model": "Model",
+      "duration": "Duration",
+      "seed": "Seed",
+      "wallTime": "Generation time",
+      "cot": "Score planning",
+      "source": "Source"
+    },
+    "wallSeconds": "{{seconds}} sec",
+    "cot": {
+      "off": "Off",
+      "melody": "Melody",
+      "full": "Melody + chords"
+    },
+    "source": {
+      "api": "API call",
+      "app": "In app"
+    },
+    "sections": {
+      "style": "Style description",
+      "negativePrompt": "Negative prompt",
+      "lyrics": "Lyrics"
+    },
+    "toasts": {
+      "reused": "Settings loaded. The seed is locked, so you can reproduce this song or tweak it and generate again.",
+      "retryNewSeed": "Queued: another version with a new seed",
+      "retried": "Added to the queue again",
+      "exported": "Exported",
+      "deleted": "Deleted"
+    }
+  }
+}

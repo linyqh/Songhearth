@@ -1,0 +1,46 @@
+{
+  "title": "API & Skill",
+  "subtitle": "Let other agents and scripts generate music on this Mac",
+  "http": {
+    "title": "HTTP API",
+    "enable": "Enable API",
+    "running": "● Running · {{url}}",
+    "disabled": "Disabled",
+    "lan": "Allow LAN access",
+    "lanOn": "Devices on the same network can call it through this Mac’s IP. Without a token, no authentication is required.",
+    "lanOff": "Only this Mac (127.0.0.1) can access it",
+    "port": "Port",
+    "requireToken": "Require token",
+    "requireTokenHint": "Off by default: anyone who knows the address can generate music. When on, calls must include the token.",
+    "token": "Token",
+    "hideToken": "Hide",
+    "regenerate": "Regenerate (the old token stops working immediately)",
+    "tokenRegenerated": "New token generated",
+    "discoveryFile": "Discovery file",
+    "discoveryHint": "Skill clients read the address and token from it automatically"
+  },
+  "quickStart": {
+    "title": "Quick start"
+  },
+  "endpoints": {
+    "health": "Health check, engine, and installed models (no token needed)",
+    "models": "Model list and download status",
+    "install": "Download or resume downloading a model",
+    "create": "Submit a generation job (returns an id)",
+    "wait": "Long-poll until the job finishes",
+    "audio": "Download the WAV",
+    "cancel": "Cancel a job",
+    "history": "History"
+  },
+  "skill": {
+    "title": "Agent Skill",
+    "description": "The skill bundles usage instructions (SKILL.md), a dependency-free Python client, and the API reference. Once installed, agents such as Claude Code and Codex can respond to “write me a song” directly.",
+    "installed": "Skill installed to {{path}}",
+    "otherLocation": "Other location",
+    "otherLocationHint": "Choose the agent’s skills folder; a songhearth folder is created inside it",
+    "chooseFolderTitle": "Choose a skills folder",
+    "previewHint": "See the instructions agents will read",
+    "preview": "Preview",
+    "collapse": "Collapse"
+  }
+}

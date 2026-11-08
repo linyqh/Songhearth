@@ -1,0 +1,34 @@
+{
+  "meta": {
+    "name": "English"
+  },
+  "app": {
+    "name": "Songhearth"
+  },
+  "actions": {
+    "cancel": "Cancel",
+    "close": "Close",
+    "delete": "Delete",
+    "retry": "Retry",
+    "save": "Save",
+    "copy": "Copy",
+    "show": "Show",
+    "view": "View",
+    "apply": "Apply",
+    "install": "Install",
+    "pause": "Pause",
+    "resume": "Resume",
+    "download": "Download",
+    "choose": "Choose…",
+    "change": "Change…",
+    "reset": "Reset to default",
+    "later": "Later",
+    "all": "All",
+    "dismiss": "Dismiss"
+  },
+  "state": {
+    "default": "Default",
+    "on": "On",
+    "off": "Off"
+  }
+}

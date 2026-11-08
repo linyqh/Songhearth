@@ -1,0 +1,14 @@
+{
+  "queued": "Queued",
+  "starting": "Starting engine",
+  "loading": "Loading model",
+  "composing": "Composing melody and vocals",
+  "generating": "Generating music",
+  "rendering": "Rendering acoustic detail",
+  "decoding": "Decoding audio",
+  "done": "Done",
+  "failed": "Failed",
+  "cancelled": "Cancelled",
+  "cancelling": "Cancelling…",
+  "interrupted": "Interrupted"
+}

@@ -1,0 +1,49 @@
+{
+  "picker": {
+    "select": "选择模型",
+    "ariaLabel": "模型",
+    "downloaded": "已下载",
+    "incomplete": "未完成",
+    "recommended": "推荐",
+    "onlyInstrumental": "仅生成纯音乐，切换模式后可用",
+    "needsLyrics": "需要歌词，切换到人声歌曲后可用",
+    "quality": "质量",
+    "speed": "速度",
+    "license": "{{name}}：{{note}}",
+    "partialProgress": "已下载 {{percent}}%",
+    "needsDownload": "需先下载 · 约 {{memory}} GB 内存",
+    "resume": "继续下载"
+  },
+  "page": {
+    "title": "模型",
+    "subtitle": "已占用 {{size}}",
+    "system": "{{chip}} · {{memory}} GB 统一内存",
+    "memoryPlenty": "全部模型都可以在这台 Mac 上运行。生成时建议关闭占用内存较大的应用。",
+    "memoryOk": "可运行大部分模型；ACE-Step 与 MiniMax 生成长歌曲时内存吃紧。",
+    "memoryLow": "内存较小，推荐 Stable Audio 3 Small 或 YuE2（Q4）。",
+    "footer": "模型文件来自 Hugging Face 上 audio.cpp 官方 GGUF 包，支持断点续传。下载慢可在“设置 → 下载源”中切换镜像。"
+  },
+  "card": {
+    "installed": "已安装",
+    "quality": "质量",
+    "speed": "速度",
+    "size": "体积",
+    "memory": "内存",
+    "memoryValue": "≈ {{memory}} GB",
+    "memoryTight": "≈ {{memory}} GB（偏紧）",
+    "languages": "语言",
+    "duration": "时长",
+    "durationRange": "{{min}}–{{max}} 秒",
+    "license": "{{name}}：{{note}}",
+    "progress": "{{done}} / {{total}} · {{speed}}",
+    "showInFinder": "在 Finder 中显示",
+    "deleteTitle": "删除模型文件",
+    "discardTitle": "丢弃已下载部分",
+    "resume": "继续下载",
+    "partialProgress": "已下载 {{percent}}%，可继续",
+    "download": "下载 · {{size}}",
+    "deleteTitleConfirm": "删除 {{name}}？",
+    "deleteBody": "将释放约 {{size}} 磁盘空间。已生成的作品不受影响，以后可重新下载。",
+    "deleted": "已删除 {{name}}"
+  }
+}

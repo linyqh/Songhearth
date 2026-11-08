@@ -1,0 +1,40 @@
+{
+  "title": "Settings",
+  "language": {
+    "title": "Language",
+    "label": "App language",
+    "hint": "“Follow system” uses your macOS language when it’s available.",
+    "system": "Follow system"
+  },
+  "engine": {
+    "title": "Inference engine",
+    "customPath": "Custom engine path",
+    "threads": "CPU threads",
+    "threadsHint": "The GPU (Metal) does most of the work; threads affect preprocessing and sampling"
+  },
+  "storage": {
+    "title": "Storage",
+    "outputDir": "Songs folder",
+    "outputDirPick": "Choose where to save songs",
+    "modelsDir": "Models folder",
+    "modelsDirPick": "Choose the models folder (you can point to an existing audio.cpp models folder)"
+  },
+  "download": {
+    "title": "Download source",
+    "server": "Model download server",
+    "serverHint": "If Hugging Face is slow or unreachable on your network, choose the mirror",
+    "custom": "Custom",
+    "customUrl": "Custom address",
+    "token": "Access token (optional)",
+    "tokenHint": "Only needed for gated repositories or when you hit rate limits"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "onFinish": "Notify when a song is ready",
+    "onFinishHint": "Sends a system notification while the app is in the background"
+  },
+  "about": {
+    "title": "About",
+    "dataDir": "Data folder"
+  }
+}

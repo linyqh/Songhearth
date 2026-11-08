@@ -1,0 +1,42 @@
+{
+  "yue2_3b": {
+    "summary": "Top-tier open-source song quality; vocals and backing in one pass",
+    "description": "Highest open-source score on WildSongBench (self-reported; comparable to Suno v5). Chinese and English lyrics; leave the lyrics empty for an instrumental. Q4 quantisation uses about 10 GB of memory on Apple Silicon; song length follows the lyrics.",
+    "tags": ["Vocals", "Instrumental", "Chinese", "English"],
+    "languages": "Chinese, English",
+    "promptHint": "English tags work best, comma-separated: language, genre, instruments, vocals.",
+    "licenseNote": "Non-commercial use only"
+  },
+  "ace_step_1_5_turbo": {
+    "summary": "Fastest; MIT-licensed for commercial use; 50+ lyric languages",
+    "description": "Planner + diffusion hybrid that renders a song in 8 steps. Trained on licensed, royalty-free and synthetic music, so output is commercially usable. Full BF16 build (quantising breaks the planner's sampling), about 10 GB on disk.",
+    "tags": ["Vocals", "Instrumental", "Multilingual", "Commercial use"],
+    "languages": "50+ languages",
+    "promptHint": "Describe style, mood, instruments and vocals in natural language, in English or Chinese.",
+    "licenseNote": "Commercial use allowed"
+  },
+  "minimax_music_3": {
+    "summary": "Top open model in third-party blind tests; full songs up to 5 minutes",
+    "description": "The only open model on the Artificial Analysis vocal leaderboard (Elo 1000). 8B global LLM + 0.6B local LLM + flow matching, 32 kHz stereo. Lyrics are required; best for fully structured pop songs.",
+    "tags": ["Vocals", "Chinese", "English", "Long songs"],
+    "languages": "Auto-detected",
+    "promptHint": "Write a detailed music description: genre, BPM, key, emotional arc, vocals and arrangement.",
+    "licenseNote": "The model name must be shown in your product UI; written authorisation is needed above USD 20M annual revenue; public content must be labelled as AI-generated"
+  },
+  "stable_audio_3_medium": {
+    "summary": "Best instrumental quality; a whole BGM track in seconds",
+    "description": "2nd on the CMU Music Arena instrumental board (behind Lyria 3 Pro). Instrumentals only, no lyrics. Ideal for scores, BGM and ambient music; prompts must be in English.",
+    "tags": ["Instrumental", "BGM", "English prompts"],
+    "languages": "English prompts",
+    "promptHint": "Describe genre, instruments, mood and BPM in English, e.g. cinematic, 90 BPM.",
+    "licenseNote": "Free for commercial use below USD 1M annual revenue; see the official licence"
+  },
+  "stable_audio_3_small": {
+    "summary": "Lightest at 1.7 GB; quick demos and loops",
+    "description": "The small Stable Audio 3 music model: runs in about 4 GB of memory and is very fast, with lower quality than Medium. Instrumentals only; prompts must be in English.",
+    "tags": ["Instrumental", "Lightweight", "English prompts"],
+    "languages": "English prompts",
+    "promptHint": "Describe genre, instruments, mood and BPM in English.",
+    "licenseNote": "Free for commercial use below USD 1M annual revenue; see the official licence"
+  }
+}

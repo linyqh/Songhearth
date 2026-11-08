@@ -1,0 +1,34 @@
+{
+  "meta": {
+    "name": "简体中文"
+  },
+  "app": {
+    "name": "Songhearth"
+  },
+  "actions": {
+    "cancel": "取消",
+    "close": "关闭",
+    "delete": "删除",
+    "retry": "重试",
+    "save": "保存",
+    "copy": "复制",
+    "show": "显示",
+    "view": "查看",
+    "apply": "应用",
+    "install": "安装",
+    "pause": "暂停",
+    "resume": "继续",
+    "download": "下载",
+    "choose": "选择…",
+    "change": "更改…",
+    "reset": "恢复默认",
+    "later": "稍后",
+    "all": "全部",
+    "dismiss": "忽略"
+  },
+  "state": {
+    "default": "默认",
+    "on": "开",
+    "off": "关"
+  }
+}

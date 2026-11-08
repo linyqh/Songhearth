@@ -1,0 +1,96 @@
+{
+  "title": "Create",
+  "subtitle": "Write a style and lyrics, and generate a full song on this Mac",
+  "titlePlaceholder": "Untitled",
+  "style": {
+    "label": "Style",
+    "placeholderFallback": "Genre, instruments, mood, vocals, comma-separated",
+    "useExample": "Use example"
+  },
+  "presets": {
+    "mandarinPop": "Mandopop",
+    "cityPop": "City pop",
+    "lofi": "Lo-fi",
+    "rock": "Rock",
+    "folk": "Folk",
+    "electronic": "Electronic",
+    "jazz": "Jazz",
+    "guofeng": "Chinese traditional",
+    "rap": "Hip hop",
+    "cinematic": "Cinematic",
+    "ambient": "Ambient",
+    "femaleVocal": "Female vocal",
+    "maleVocal": "Male vocal"
+  },
+  "lyrics": {
+    "label": "Lyrics",
+    "modeVocals": "With vocals",
+    "modeInstrumental": "Instrumental",
+    "insertTagTitle": "Insert a section marker at the cursor",
+    "placeholder": "[Verse]\nThe evening wind drifts past the old street lamps\nI fold my worries into paper planes\n\n[Chorus]\nLet tonight's starlight\nStay and sing this song with me",
+    "hint": "Put each section marker, such as [Verse] or [Chorus], on its own line. The language of the lyrics is the language sung.",
+    "lineCount_one": "{{count}} line",
+    "lineCount_other": "{{count}} lines",
+    "charCount_one": "{{count}} character",
+    "charCount_other": "{{count}} characters",
+    "stats": "{{lines}} · {{chars}}"
+  },
+  "instrumental": {
+    "title": "Instrumental mode",
+    "note": "No vocals are sung, which suits BGM, scores and ambient music. Your lyrics are kept, so switch back to vocals to keep editing."
+  },
+  "model": {
+    "label": "Model"
+  },
+  "duration": {
+    "label": "Duration",
+    "labelMax": "Maximum duration",
+    "maxHint": "The actual length follows the lyrics; this is the upper limit."
+  },
+  "advanced": {
+    "toggle": "Advanced options"
+  },
+  "cot": {
+    "label": "Score planning",
+    "off": "Off",
+    "offTitle": "Skips the score; about twice as fast",
+    "melody": "Melody",
+    "full": "Melody + chords",
+    "hint": "Writing out the melody and chords before singing gives a more complete structure; turn it off to generate much faster."
+  },
+  "steps": {
+    "label": "Sampling steps"
+  },
+  "negative": {
+    "label": "Negative prompt",
+    "placeholder": "e.g. noise, distortion, low quality"
+  },
+  "seed": {
+    "label": "Random seed",
+    "locked": "Locked",
+    "random": "Random each time",
+    "placeholder": "Random",
+    "reroll": "Pick another seed",
+    "lockedTitle": "Locked: the same settings reproduce the same result",
+    "unlockedTitle": "Unlocked: a new seed is used for every generation"
+  },
+  "generate": {
+    "button": "Generate music",
+    "downloading": "Downloading {{percent}}%",
+    "download": "Download model · {{size}}",
+    "downloadStarted": "Started downloading {{name}}",
+    "needs": "Still needed: {{items}}",
+    "firstRun": "The model must be downloaded on first use. Once it finishes, you can generate."
+  },
+  "problems": {
+    "prompt": "Add a style description",
+    "lyricsRequired": "{{name}} requires lyrics",
+    "lyrics": "Add lyrics, or switch to instrumental",
+    "engine": "Install the audio.cpp engine"
+  },
+  "toast": {
+    "queued_one": "“{{title}}” was added to the queue; {{count}} song ahead",
+    "queued_other": "“{{title}}” was added to the queue; {{count}} songs ahead",
+    "started": "Started generating “{{title}}”"
+  }
+}

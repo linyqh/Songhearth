@@ -1,0 +1,40 @@
+{
+  "title": "设置",
+  "language": {
+    "title": "语言",
+    "label": "应用语言",
+    "hint": "“跟随系统”会在可用时使用 macOS 的系统语言。",
+    "system": "跟随系统"
+  },
+  "engine": {
+    "title": "推理引擎",
+    "customPath": "自定义引擎路径",
+    "threads": "CPU 线程",
+    "threadsHint": "GPU（Metal）负责主要计算，线程影响预处理与采样"
+  },
+  "storage": {
+    "title": "存储位置",
+    "outputDir": "作品保存位置",
+    "outputDirPick": "选择作品保存位置",
+    "modelsDir": "模型目录",
+    "modelsDirPick": "选择模型目录（可指向已有的 audio.cpp models 文件夹）"
+  },
+  "download": {
+    "title": "下载源",
+    "server": "模型下载服务器",
+    "serverHint": "国内网络可选择镜像加速",
+    "custom": "自定义",
+    "customUrl": "自定义地址",
+    "token": "访问令牌（可选）",
+    "tokenHint": "仅在下载受限仓库或遇到限速时需要"
+  },
+  "notifications": {
+    "title": "通知",
+    "onFinish": "生成完成时通知",
+    "onFinishHint": "应用在后台时发送系统通知"
+  },
+  "about": {
+    "title": "关于",
+    "dataDir": "数据目录"
+  }
+}
