@@ -45,6 +45,9 @@ xcrun notarytool history --keychain-profile "$NOTARY_PROFILE" >/dev/null
 if [ "$SKIP_BUILD" = 0 ]; then
   npm ci
   npm run fetch-engine
+  # Tauri signs only the app executable, not resource binaries; notarization requires the bundled
+  # engine CLI to carry a Developer ID signature, secure timestamp and hardened runtime.
+  codesign --force --options runtime --timestamp --sign "$APPLE_SIGNING_IDENTITY" src-tauri/resources/engine/audiocpp_cli
   npm run tauri -- build
 fi
 
