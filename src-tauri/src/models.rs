@@ -14,7 +14,7 @@ use futures_util::StreamExt;
 use serde::{Deserialize, Serialize};
 use tokio_util::sync::CancellationToken;
 
-use crate::catalog::ModelDef;
+use crate::catalog::{ModelDef, ModelFile};
 use crate::core::{write_json, Core};
 use crate::msg::Coded;
 
@@ -87,7 +87,7 @@ fn state_path(dest: &Path) -> PathBuf {
     PathBuf::from(format!("{}.part.json", dest.display()))
 }
 
-fn file_complete(dest: &Path, size: u64) -> bool {
+pub fn file_complete(dest: &Path, size: u64) -> bool {
     std::fs::metadata(dest).map(|m| m.len() == size).unwrap_or(false)
 }
 
@@ -185,7 +185,7 @@ pub fn start_install(core: &Arc<Core>, id: &str) -> Result<(), Coded> {
     let core2 = core.clone();
     tauri::async_runtime::spawn(async move {
         let ticker = spawn_ticker(core2.clone(), def.id.to_string(), handle.clone());
-        let result = install_files(&core2, &def, &root, &handle).await;
+        let result = install_files(&core2, def.repo, &def.files, &root, &handle).await;
         ticker.abort();
         core2.downloads.lock().unwrap().remove(def.id);
         match result {
@@ -224,9 +224,9 @@ fn spawn_ticker(core: Arc<Core>, id: String, handle: Arc<DownloadHandle>) -> tau
     })
 }
 
-async fn install_files(core: &Arc<Core>, def: &ModelDef, root: &Path, handle: &Arc<DownloadHandle>) -> anyhow::Result<()> {
+pub async fn install_files(core: &Arc<Core>, repo: &str, files: &[ModelFile], root: &Path, handle: &Arc<DownloadHandle>) -> anyhow::Result<()> {
     let settings = core.settings();
-    for f in &def.files {
+    for f in files {
         let dest = root.join(f.local);
         if file_complete(&dest, f.size) {
             continue;
@@ -234,10 +234,12 @@ async fn install_files(core: &Arc<Core>, def: &ModelDef, root: &Path, handle: &A
         let url = format!(
             "{}/{}/resolve/main/{}",
             settings.hf_endpoint,
-            def.repo,
+            repo,
             f.remote.split('/').map(encode_segment).collect::<Vec<_>>().join("/")
         );
-        download_file(core, handle, &url, settings.hf_token.as_deref(), &dest, f.size).await?;
+        // The Hugging Face token is meaningless (and rejected) on ModelScope.
+        let token = if settings.hf_endpoint.contains("modelscope.cn") { None } else { settings.hf_token.as_deref() };
+        download_file(core, handle, &url, token, &dest, f.size).await?;
     }
     Ok(())
 }

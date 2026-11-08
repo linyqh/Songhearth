@@ -174,6 +174,11 @@ pub fn update_job_meta(core: CoreState<'_>, id: String, title: Option<String>, f
 }
 
 #[tauri::command]
+pub async fn align_job(core: CoreState<'_>, id: String) -> Result<Job, Coded> {
+    crate::align::start(core.inner(), &id).await
+}
+
+#[tauri::command]
 pub fn export_track(core: CoreState<'_>, id: String, dest: String) -> Result<(), Coded> {
     let job = core.job(&id).ok_or_else(|| Coded::new("not_found", format!("Job not found: {id}")))?;
     let src = job.output_path.ok_or_else(|| Coded::new("no_audio", "This job has no audio file"))?;

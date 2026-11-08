@@ -37,5 +37,8 @@
   "engine_exit_silent": "audiocpp_cli exited (code {{code}}) without producing audio.",
   "engine_exit": "audiocpp_cli exited (code {{code}}):\n{{detail}}",
   "engine_wait_failed": "Waiting for audiocpp_cli failed: {{detail}}",
-  "unauthorized": "A valid API token is required."
+  "unauthorized": "A valid API token is required.",
+  "align_failed": "Lyric alignment failed: {{detail}}",
+  "align_no_lyrics": "Only finished songs with lyrics can be aligned.",
+  "align_no_audio": "The audio file could not be found."
 }

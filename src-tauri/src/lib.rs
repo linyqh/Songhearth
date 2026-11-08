@@ -1,3 +1,4 @@
+mod align;
 mod api;
 mod catalog;
 mod commands;
@@ -44,6 +45,7 @@ pub fn run() {
             commands::retry_job,
             commands::update_job_meta,
             commands::export_track,
+            commands::align_job,
             commands::install_skill,
             commands::skill_markdown,
         ])

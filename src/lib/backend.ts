@@ -18,6 +18,7 @@ export const backend = {
   retryJob: (id: string, newSeed: boolean) => invoke<Job>("retry_job", { id, newSeed }),
   updateJobMeta: (id: string, meta: { title?: string; favorite?: boolean }) =>
     invoke<Job>("update_job_meta", { id, title: meta.title ?? null, favorite: meta.favorite ?? null }),
+  alignJob: (id: string) => invoke<Job>("align_job", { id }),
   exportTrack: (id: string, dest: string) => invoke<void>("export_track", { id, dest }),
   installSkill: (target: string) => invoke<string>("install_skill", { target }),
   skillMarkdown: () => invoke<string>("skill_markdown"),

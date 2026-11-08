@@ -30,7 +30,8 @@
     "play": "Play",
     "pause": "Pause",
     "viewDetails": "View song details",
-    "close": "Close player"
+    "close": "Close player",
+    "lyrics": "Lyrics"
   },
   "revealInFolder": "Show in folder",
   "errorBoundary": {

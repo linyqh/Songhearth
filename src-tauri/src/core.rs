@@ -144,6 +144,7 @@ impl Core {
         }
         // A job cannot survive an app restart mid-run; queued work resumes.
         for job in jobs.iter_mut() {
+            job.align_state = None; // alignment does not survive a restart
             if job.status == crate::jobs::JobStatus::Running {
                 job.status = crate::jobs::JobStatus::Failed;
                 job.error = Some("The app quit while this job was running; retry to generate it again.".into());

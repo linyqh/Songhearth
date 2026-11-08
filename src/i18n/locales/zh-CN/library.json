@@ -30,6 +30,7 @@
     "cancelled": "已取消"
   },
   "detail": {
+    "lyricsToggle": "显示 / 隐藏滚动歌词",
     "close": "关闭（Esc）",
     "previous": "上一首（←）",
     "next": "下一首（→）",
@@ -81,6 +82,12 @@
       "retried": "已重新加入队列",
       "exported": "已导出",
       "deleted": "已删除"
+    },
+    "align": {
+      "estimated": "歌词时间为估算，可能与演唱有偏差",
+      "action": "精准对齐",
+      "running": "正在对齐歌词… {{pct}}%",
+      "downloading": "正在下载对齐模型（约 1.1 GB）… {{pct}}%"
     }
   }
 }

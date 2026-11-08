@@ -147,6 +147,50 @@
 .player-meta .s { font-size: 11px; color: var(--label-2); }
 .player .time { font-size: 11px; color: var(--label-2); width: 34px; text-align: center; }
 .main:has(.player) .content { padding-bottom: 92px; }
+.player-lyrics {
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  bottom: 82px;
+  height: 68px;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: 0 24px;
+  z-index: 9;
+  text-align: center;
+  animation: sheet-in 0.3s cubic-bezier(0.2, 1.1, 0.3, 1);
+}
+.player-lyrics .now { font-size: 17px; font-weight: 650; max-width: 100%; animation: lyric-in 0.35s ease; }
+.player-lyrics .next { font-size: 12px; color: var(--label-3); max-width: 100%; }
+@keyframes lyric-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.main:has(.player-lyrics) .content { padding-bottom: 168px; }
+
+/* Scrolling lyrics */
+.lyrics-panel { flex: 1; min-height: 0; display: flex; flex-direction: column; padding: 0; overflow: hidden; }
+.align-bar { display: flex; align-items: center; gap: 10px; padding: 10px 16px; font-size: 12px; color: var(--label-2); border-bottom: 0.5px solid var(--separator, rgba(128,128,128,0.2)); flex: none; }
+.work-main.lyrics-mode { overflow: hidden; }
+.lyrics-scroll { position: relative; flex: 1; overflow-y: auto; padding: 0 24px; scrollbar-width: none; }
+.lyrics-scroll::-webkit-scrollbar { display: none; }
+.lyrics-pad { height: 40%; }
+.lyric-line {
+  font-size: 22px;
+  font-weight: 650;
+  line-height: 1.35;
+  padding: 9px 0;
+  color: var(--label-3);
+  cursor: pointer;
+  transform-origin: left center;
+  transition: color 0.3s, transform 0.3s, opacity 0.3s;
+  transform: scale(0.88);
+}
+.lyric-line:hover { color: var(--label-2); }
+.lyric-line.past { opacity: 0.7; }
+.lyric-line.active { color: var(--label); transform: scale(1); opacity: 1; }
+.lyric-tag { font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--label-3); padding: 18px 0 2px; }
 
 /* ---------- Create ---------- */
 

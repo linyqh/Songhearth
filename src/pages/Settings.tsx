@@ -12,6 +12,8 @@ import type { Settings } from "../lib/types";
 
 const HF = "https://huggingface.co";
 const MIRROR = "https://hf-mirror.com";
+const MODELSCOPE = "https://modelscope.cn/models";
+const KNOWN = [HF, MIRROR, MODELSCOPE];
 
 export function SettingsPage() {
   const { t } = useTranslation(["settings", "common", "shell"]);
@@ -39,7 +41,14 @@ export function SettingsPage() {
     if (typeof dir === "string") await save({ [key]: dir });
   };
 
-  const source = settings.hfEndpoint === HF ? "hf" : settings.hfEndpoint === MIRROR ? "mirror" : "custom";
+  const source =
+    settings.hfEndpoint === HF
+      ? "hf"
+      : settings.hfEndpoint === MIRROR
+        ? "mirror"
+        : settings.hfEndpoint === MODELSCOPE
+          ? "modelscope"
+          : "custom";
 
   return (
     <>
@@ -142,16 +151,18 @@ export function SettingsPage() {
               onChange={(v) => {
                 if (v === "hf") void save({ hfEndpoint: HF });
                 else if (v === "mirror") void save({ hfEndpoint: MIRROR });
-                else setCustomEndpoint(settings.hfEndpoint === HF || settings.hfEndpoint === MIRROR ? "https://" : settings.hfEndpoint);
+                else if (v === "modelscope") void save({ hfEndpoint: MODELSCOPE });
+                else setCustomEndpoint(KNOWN.includes(settings.hfEndpoint) ? "https://" : settings.hfEndpoint);
               }}
               options={[
                 { value: "hf", label: "Hugging Face" },
                 { value: "mirror", label: "hf-mirror" },
+                { value: "modelscope", label: t("download.modelscope") },
                 { value: "custom", label: t("download.custom") },
               ]}
             />
           </div>
-          {(source === "custom" || (customEndpoint !== HF && customEndpoint !== MIRROR)) && (
+          {(source === "custom" || !KNOWN.includes(customEndpoint)) && (
             <div className="row">
               <div className="row-label">
                 <div className="title">{t("download.customUrl")}</div>

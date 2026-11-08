@@ -29,7 +29,8 @@
     "play": "播放",
     "pause": "暂停",
     "viewDetails": "查看作品详情",
-    "close": "关闭播放器"
+    "close": "关闭播放器",
+    "lyrics": "歌词"
   },
   "revealInFolder": "在文件夹中显示",
   "errorBoundary": {

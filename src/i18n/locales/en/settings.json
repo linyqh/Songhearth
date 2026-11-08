@@ -22,7 +22,8 @@
   "download": {
     "title": "Download source",
     "server": "Model download server",
-    "serverHint": "If Hugging Face is slow or unreachable on your network, choose the mirror",
+    "serverHint": "If Hugging Face is slow or unreachable on your network, choose ModelScope or the mirror",
+    "modelscope": "ModelScope",
     "custom": "Custom",
     "customUrl": "Custom address",
     "token": "Access token (optional)",

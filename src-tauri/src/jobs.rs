@@ -72,6 +72,17 @@ pub struct Job {
     pub source: String,
     #[serde(default)]
     pub favorite: bool,
+    /// `[start, end]` seconds for each sung lyric line (see `align::sung_lines`),
+    /// from forced alignment. `None` until aligned.
+    #[serde(default)]
+    pub lyric_times: Option<Vec<[f64; 2]>>,
+    /// `preparing` | `downloading` | `aligning` while alignment runs.
+    #[serde(default)]
+    pub align_state: Option<String>,
+    #[serde(default)]
+    pub align_progress: f64,
+    #[serde(default)]
+    pub align_error: Option<Coded>,
 }
 
 pub type JobError = Coded;
@@ -173,6 +184,10 @@ pub fn create(core: &Arc<Core>, mut p: GenParams, source: &str) -> Result<Job, J
         error_info: None,
         source: source.to_string(),
         favorite: false,
+        lyric_times: None,
+        align_state: None,
+        align_progress: 0.0,
+        align_error: None,
     };
     core.jobs.lock().unwrap().push(job.clone());
     core.persist_jobs();

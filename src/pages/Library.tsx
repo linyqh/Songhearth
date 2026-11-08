@@ -7,6 +7,7 @@ import {
   FolderOpen,
   Heart,
   ListMusic,
+  MicVocal,
   Pause,
   Play,
   RefreshCw,
@@ -19,9 +20,11 @@ import {
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Cover } from "../components/Cover";
+import { hasLyrics, LyricsPanel } from "../components/Lyrics";
 import { Empty, ProgressBar, Segmented, Waveform } from "../components/ui";
 import { backend } from "../lib/backend";
 import { formatDateTime, formatDuration, formatEta } from "../lib/format";
+import { usePersistedFlag } from "../lib/lyrics";
 import { usePlayer } from "../lib/player";
 import { emptyDraft, sortedJobs, useStore } from "../lib/store";
 import type { Job } from "../lib/types";
@@ -269,6 +272,8 @@ function WorkDetail({
   const isCurrent = player.current?.id === job.id;
   const total = job.audioDurationSec ?? 0;
   const vocals = !job.params.instrumental && !!job.params.lyrics.trim();
+  const [lyricsPref, setLyricsPref] = usePersistedFlag("songhearth.lyricsPanel");
+  const lyricsOn = lyricsPref && hasLyrics(job);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -373,7 +378,7 @@ function WorkDetail({
             )}
           </div>
 
-          <div className="work-main">
+          <div className={`work-main${lyricsOn ? " lyrics-mode" : ""}`}>
             <div>
               <input
                 className="work-title"
@@ -422,6 +427,16 @@ function WorkDetail({
                 </>
               )}
               <div className="grow" />
+              {hasLyrics(job) && (
+                <button
+                  className={`icon-btn${lyricsOn ? " on" : ""}`}
+                  title={t("detail.lyricsToggle")}
+                  aria-pressed={lyricsOn}
+                  onClick={() => setLyricsPref(!lyricsPref)}
+                >
+                  <MicVocal size={17} />
+                </button>
+              )}
               <button
                 className={`icon-btn${job.favorite ? " on" : ""}`}
                 title={job.favorite ? t("detail.unfavorite") : t("detail.favorite")}
@@ -482,6 +497,12 @@ function WorkDetail({
               </div>
             )}
 
+            {lyricsOn ? (
+              <div className="card lyrics-panel">
+                <LyricsPanel job={job} />
+              </div>
+            ) : (
+              <>
             <div className="meta-grid card">
               <Meta label={t("detail.meta.model")} value={model?.name ?? job.modelId} />
               <Meta label={t("detail.meta.duration")} value={job.audioDurationSec ? formatDuration(job.audioDurationSec) : `≤ ${formatDuration(job.duration)}`} />
@@ -515,6 +536,8 @@ function WorkDetail({
               <div className="selectable mono tiny muted" style={{ wordBreak: "break-all", padding: "0 2px" }}>
                 {job.outputPath}
               </div>
+            )}
+              </>
             )}
           </div>
         </div>

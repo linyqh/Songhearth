@@ -21,7 +21,7 @@ const LOAD_ESTIMATE: f64 = 10.0;
 /// Best GPU backend the engine build offers: Metal on macOS, Vulkan on the
 /// Windows package, CPU only if nothing else is compiled in. An empty list
 /// (old CLI that does not report backends) falls back to the platform default.
-fn pick_backend(available: &[String]) -> &'static str {
+pub fn pick_backend(available: &[String]) -> &'static str {
     const PREFERENCE: [&str; 4] = ["metal", "cuda", "vulkan", "cpu"];
     PREFERENCE
         .into_iter()
@@ -283,6 +283,9 @@ async fn run(core: &Arc<Core>, id: &str) {
             });
             core.persist_jobs();
             let _ = done; // completion notifications are raised by the webview (localised)
+            if wants_vocals(&job.params) {
+                crate::align::auto_start(core, id).await;
+            }
         }
     }
 }

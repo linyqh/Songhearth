@@ -107,6 +107,11 @@ export interface Job {
   errorInfo: Coded | null;
   source: "app" | "api";
   favorite: boolean;
+  /** [start, end] seconds per sung lyric line, from forced alignment. */
+  lyricTimes: [number, number][] | null;
+  alignState: "preparing" | "downloading" | "aligning" | null;
+  alignProgress: number;
+  alignError: Coded | null;
 }
 
 export interface EngineStatus {
