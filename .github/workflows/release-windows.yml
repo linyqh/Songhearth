@@ -1,0 +1,97 @@
+name: release-windows
+
+# Windows installers are built in the cloud; macOS packages are built locally and
+# uploaded with scripts/release-macos.sh to the same GitHub Release.
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "上传到的 Release tag（如 v0.1.0，须与 tauri.conf.json 版本一致）；留空只生成 Actions artifact"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-windows-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  windows:
+    name: Windows x64
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Resolve version and tag
+        id: meta
+        shell: pwsh
+        run: |
+          $version = (Get-Content src-tauri/tauri.conf.json -Raw | ConvertFrom-Json).version
+          $tag = if ("${{ github.ref_type }}" -eq "tag") { "${{ github.ref_name }}" } else { "${{ inputs.tag }}" }
+          if ($tag -and $tag -ne "v$version") { throw "tag $tag 与 tauri.conf.json 的版本 $version 不一致" }
+          "version=$version" >> $env:GITHUB_OUTPUT
+          "tag=$tag" >> $env:GITHUB_OUTPUT
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+
+      - name: Install frontend dependencies
+        run: npm ci
+
+      # Downloads the prebuilt audio.cpp Windows (Vulkan, portable) release into
+      # src-tauri/resources/engine, which the bundle ships.
+      - name: Fetch audio.cpp engine
+        run: npm run fetch-engine
+
+      - name: Rust tests
+        working-directory: src-tauri
+        run: cargo test --lib
+
+      - name: Build installer
+        run: npm run tauri -- build
+
+      - name: Locate installer
+        id: bundle
+        shell: pwsh
+        run: |
+          $exe = Get-ChildItem "src-tauri/target/release/bundle/nsis/*-setup.exe" | Select-Object -First 1
+          if (-not $exe) { throw "NSIS installer not found" }
+          "path=$($exe.FullName)" >> $env:GITHUB_OUTPUT
+          "name=$($exe.Name)" >> $env:GITHUB_OUTPUT
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.bundle.outputs.name }}
+          path: ${{ steps.bundle.outputs.path }}
+          if-no-files-found: error
+
+      - name: Upload to GitHub Release
+        if: steps.meta.outputs.tag != ''
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.meta.outputs.tag }}
+        run: |
+          gh release view $env:TAG *> $null
+          if ($LASTEXITCODE -ne 0) {
+            gh release create $env:TAG --draft --verify-tag --title "Songhearth $env:TAG" --generate-notes
+            if ($LASTEXITCODE -ne 0) { gh release view $env:TAG *> $null }
+            if ($LASTEXITCODE -ne 0) { throw "cannot create release $env:TAG" }
+          }
+          gh release upload $env:TAG "${{ steps.bundle.outputs.path }}" --clobber
+          if ($LASTEXITCODE -ne 0) { throw "upload failed" }
